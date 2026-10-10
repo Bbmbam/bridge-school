@@ -68,8 +68,6 @@ async function askBridgeAI(promptText) {
         });
 
         let data = await response.json();
-let data = await response.json();
-
         if (!response.ok) {
             console.error("Gemini API Error:", response.status, data);
             alert(
