@@ -46,14 +46,19 @@
             opacity: 0.9;
         }
         .container {
-            max-width: 1000px;
+            max-width: 900px;
             margin: -30px auto 40px auto;
             padding: 0 20px;
         }
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 20px;
+        }
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
         }
         .card {
             background: var(--card-bg);
@@ -187,7 +192,7 @@
                         <span class="badge">ขั้นสูง</span>
                     </div>
                     <h3>วิเคราะห์ 4 มือ & Convention</h3>
-                    <p>จำลองการเล่นและการประมูลครบทั้ง 4 ทิศทาง พร้อมรองรับ Convention เฉพาะตัวของคุณ</p>
+                    <p>จำลองการประมูลและการเล่น</p>
                 </div>
                 <a href="#fullgame" class="btn">ใช้งานระบบ &rarr;</a>
             </div>
