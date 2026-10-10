@@ -24,7 +24,6 @@
             padding: 0;
             line-height: 1.7;
         }
-        /* กำหนดสีดอกไพ่อัตโนมัติ */
         .suit-s { color: var(--suit-black); font-weight: bold; }
         .suit-h { color: var(--suit-red); font-weight: bold; }
         .suit-d { color: var(--suit-red); font-weight: bold; }
@@ -35,6 +34,7 @@
             color: white;
             padding: 30px 20px;
             text-align: center;
+            position: relative;
         }
         header h1 {
             font-size: 1.8rem;
@@ -43,20 +43,39 @@
         header p {
             font-style: italic;
             opacity: 0.9;
+            margin: 0;
         }
-        .back-home {
+        
+        /* แถบเมนูด้านบน (ปุ่มซ้ายและขวา) */
+        .top-nav-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 20px auto 0 auto;
+            padding: 0 20px;
+        }
+        .nav-btn {
             display: inline-block;
-            margin: 15px 20px 0 20px;
             padding: 8px 16px;
             background: var(--secondary);
             color: white;
             text-decoration: none;
             border-radius: 6px;
             font-weight: bold;
+            font-size: 0.95rem;
             transition: 0.3s;
         }
-        .back-home:hover {
+        .nav-btn:hover {
             background: var(--primary);
+        }
+        .btn-exercise {
+            background: var(--accent);
+            color: #1b4332;
+        }
+        .btn-exercise:hover {
+            background: #40916c;
+            color: white;
         }
         
         .layout-container {
@@ -68,7 +87,6 @@
             align-items: flex-start;
         }
 
-        /* สารบัญด้านข้าง (Sidebar) */
         sidebar {
             width: 300px;
             background: var(--card-bg);
@@ -133,7 +151,6 @@
             color: var(--text-muted);
         }
 
-        /* เนื้อหาหลักด้านขวา */
         main-content {
             flex: 1;
             background: var(--card-bg);
@@ -202,6 +219,10 @@
                 top: 0;
                 max-height: none;
             }
+            .top-nav-bar {
+                flex-direction: column;
+                gap: 10px;
+            }
         }
     </style>
 </head>
@@ -212,7 +233,11 @@
         <p>By Kridsadayut Plengsap</p>
     </header>
 
-    <a href="index.html" class="back-home">&larr; กลับหน้าหลัก</a>
+    <!-- แถบปุ่มนำทาง ซ้ายและขวา -->
+    <div class="top-nav-bar">
+        <a href="index.html" class="nav-btn">&larr; กลับหน้าหลัก</a>
+        <a href="exercise.html" class="nav-btn btn-exercise">เข้าสู่แบบฝึกหัด &rarr;</a>
+    </div>
 
     <div class="layout-container">
         <!-- สารบัญด้านข้าง -->
@@ -327,13 +352,16 @@
             <!-- 3. Responding to 1C opening -->
             <section id="sec3">
                 <h2>3. Responding to 1<span class="suit-c">♣</span> opening</h2>
-                <p><strong>นิยาม OPENING 1<span class="suit-c">♣</span>:</strong> 11-13 Balance open 1<span class="suit-c">♣</span> | 17-19 Balance open 1<span class="suit-c">♣</span> except M5 | 11-20 <span class="suit-c">♣</span>4+ unbalance</p>
+                <p><strong>นิยาม:</strong><br>
+                11-13 Balance open 1<span class="suit-c">♣</span><br>
+                17-19 Balance open 1<span class="suit-c">♣</span> except M5<br>
+                11-20 <span class="suit-c">♣</span>4+ unbalance</p>
                 
-                <h3>Response Table</h3>
+                <h3>Response</h3>
                 <table>
                     <thead>
                         <tr>
-                            <th>Response</th>
+                            <th>Bid</th>
                             <th>Meaning</th>
                         </tr>
                     </thead>
@@ -354,14 +382,17 @@
 
                 <div class="sub-section" id="resp-a">
                     <h3>A. Transfer response to Majors</h3>
-                    <p><strong>1<span class="suit-c">♣</span>-1<span class="suit-d">♦</span> (Transfer <span class="suit-h">♥</span>) | 1<span class="suit-c">♣</span>-1<span class="suit-h">♥</span> (Transfer <span class="suit-s">♠</span>)</strong></p>
-                    <p>Opener ถามตัวเองเพียง 2 ข้อ: <strong>มี Support หรือไม่? / มี Extra Values หรือไม่?</strong></p>
-                    <p><strong>Minimum hand Opener rebid:</strong></p>
-                    <ul>
-                        <li>Accept 1M (support 2+)</li>
-                        <li>1<span class="suit-s">♠</span> (S4 no H3)</li>
-                    </ul>
-                    <p><strong>จากนั้นเลือก Bid ตามตาราง Rebid:</strong></p>
+                    <p>1<span class="suit-c">♣</span>-1<span class="suit-d">♦</span> (Transfer <span class="suit-h">♥</span>)<br>
+                    1<span class="suit-c">♣</span>-1<span class="suit-h">♥</span> (Transfer <span class="suit-s">♠</span>)<br>
+                    Opener ถามตัวเองเพียง 2 ข้อ:<br>
+                    มี Support หรือไม่<br>
+                    มี Extra Values หรือไม่</p>
+                    
+                    <p><strong>Minimum hand Opener rebid:</strong><br>
+                    - Accept 1M (support 2+)<br>
+                    - 1<span class="suit-s">♠</span> (S4 no H3)</p>
+
+                    <p><strong>จากนั้นเลือก Bid ตามตาราง:</strong></p>
                     <table>
                         <thead>
                             <tr>
@@ -381,67 +412,119 @@
                         </tbody>
                     </table>
                     
-                    <ul>
-                        <li><strong>แนวทางการประมูลเมื่อ accept 1M or 1<span class="suit-s">♠</span> (Responder rebid):</strong> Pass or 1NT (หาทางจอดที่ดีที่สุด) หรือ Transfer Check Back</li>
-                        <li><strong>แนวทางการประมูลเมื่อ rebid 2<span class="suit-c">♣</span> (Responder rebid):</strong> Pass, 2<span class="suit-d">♦</span> (GF ใช้ Shape relay หารูปไพ่), หรือ Other (GI)</li>
-                        <li><strong>แนวทางการประมูลเมื่อบิด Strong Fit (3 or 4):</strong> Responder bidds 2M/3<span class="suit-c">♣</span> (min 5-7), 2M+1 (เข้าสู่ Shape Relay), 3M-1 (ชวนเกมหรือซ่อนข้อมูลคนเดิน)</li>
-                        <li><strong>NT Fit 4:</strong> 3<span class="suit-c">♣</span> (ask Doubleton &rarr; HML), 3M-1 (Transfer to M เลือกผ่านหรือบิดเกม ถ้าบิด new suit = short)</li>
-                        <li><strong>แนวทางการประมูลเมื่อบิด Strong No-Fit:</strong> 2<span class="suit-c">♣</span> (8+ GF now เข้าสู่ GF Relay), 2<span class="suit-d">♦</span> (5-7 unclear bid)</li>
-                        <li><strong>แนวทางการประมูลเมื่อบิด raise 2M 14-15 support M4:</strong> Pass, Game, หรือ Game try</li>
-                    </ul>
+                    <p>• <strong>แนวทางการประมูลเมื่อ accept 1M or 1<span class="suit-s">♠</span></strong><br>
+                    Responder rebid:<br>
+                    - Pass or 1NT (หาทางจอดที่ดีที่สุด)<br>
+                    - Transfer Check Back (see below)</p>
+
+                    <p>• <strong>แนวทางการประมูลเมื่อ rebid 2<span class="suit-c">♣</span></strong><br>
+                    Responder rebid:<br>
+                    - Pass<br>
+                    - 2<span class="suit-d">♦</span> (GF ใช้ Shape relay หารูปไพ่)<br>
+                    - Other (GI)</p>
+
+                    <p>• <strong>แนวทางการประมูลเมื่อบิด Strong Fit</strong> (Strong Fit 3 or Strong Fit 4)<br>
+                    Responder rebid:<br>
+                    - 2M/3<span class="suit-c">♣</span> (min 5-7 อาจจะยังไม่เกม)<br>
+                    - 2M+1 (ไพ่เกมยังไม่แน่ใจว่าจะลงอะไร หรือสนใจสแลม จะเข้าสู่ Shape Relay)<br>
+                    - 3M-1 (ชวนเกมหรือแค่เกม จะให้มือแต้มเยอะได้เดิน และซ่อนข้อมูลคนเดิน)</p>
+
+                    <p><strong>NT Fit 4</strong><br>
+                    Responder rebid (แนวคิดคล้ายตระกูล NT):<br>
+                    - 3<span class="suit-c">♣</span> [+1 Relay] ถามชุด Doubleton &rarr; HML (เพราะการไปสแลมการรู้ doubleton สำคัญมาก)<br>
+                    - Transfer M ถ้าต้องการจะเดิน part score or game คล้ายกับเปิด 1NT</p>
+
+                    <p>• <strong>แนวทางการประมูลเมื่อบิด Strong No-Fit</strong><br>
+                    Responder rebid:<br>
+                    - 2<span class="suit-c">♣</span> (8+ GF now เข้าสู่ Game Force Relay)<br>
+                    - 2<span class="suit-d">♦</span> (5-7 unclear bid รอดูคนเปิดจะทำอะไรต่อ)</p>
+
+                    <p>• <strong>แนวทางการประมูลเมื่อบิด raise 2M 14-15 support M4</strong><br>
+                    Responder rebid:<br>
+                    - Pass (น่าจะดีที่สุด)<br>
+                    - Game (ไม่สนใจไปสแลม)<br>
+                    - Game try (เมื่อไม่แน่ใจว่าเกมได้ไหม หรือสนใจจะไปสแลม)</p>
                 </div>
 
                 <div class="sub-section" id="game-try">
                     <h3>GAME TRY STRUCTURE</h3>
-                    <p>แนวคิด: เมื่อเจอทรัมพ์ Major ที่ระดับ 2 บางครั้งรวมกันยังไม่แน่ใจว่าได้ 25+ หรือไม่ จึงต้องถาม min-max และ Honor หรือชุดสั้น</p>
+                    <p>แนวคิด: เมื่อเราเจอทรัมพ์ Major ที่ระดับ 2 บางครั้งรวมกันแล้วยังไม่แน่ใจ ว่าได้ 25+ หรือน้อยกว่า ก็ต้องถาม min-max แต่การเอา Honor มาถูกตัวหรือ มีชุดสั้น ก็อาจไปเกมด้วยแต้มรวมน้อยกว่า 25 ได้ เราเลยมีการทำ Game Try หลายๆ แบบ ขึ้นอยู่กับรูปไพ่คนทำ Game Try ดังนี้:</p>
                     <ol>
-                        <li><strong>2M+1:</strong> asking min max + Honor (ผู้ตอบเลือกตอบ Honor/good suit จากชุดที่เจอก่อน แล้วคนถาม +1 Relay ถาม min max อีกที)</li>
+                        <li><strong>2M+1:</strong> asking min max + Honor
+                            <ul>
+                                <li>ผู้ตอบจะเลือกตอบ Honor or good suit จากชุดที่เจอก่อน</li>
+                                <li>คนถามจะ +1 Relay ถาม min max อีกที</li>
+                            </ul>
+                        </li>
                         <li><strong>2NT:</strong> สำหรับทรัมพ์ <span class="suit-h">♥</span> จะเป็น short suit <span class="suit-s">♠</span> (Short far suit)</li>
-                        <li><strong>3m:</strong> short suit m Game Try (Hint: ควรมีทรัมพ์ยาวหน่อย)</li>
+                        <li><strong>3m:</strong> short suit m Game Try</li>
                     </ol>
-                    <p><strong>Example:</strong> 1<span class="suit-c">♣</span>-1<span class="suit-d">♦</span> 2<span class="suit-h">♥</span> &rarr; 2<span class="suit-s">♠</span> asking &rarr; 2NT (Honor <span class="suit-s">♠</span> or good <span class="suit-s">♠</span>), 3<span class="suit-c">♣</span> (Honor <span class="suit-c">♣</span> or good), 3<span class="suit-d">♦</span> (Honor <span class="suit-d">♦</span> with max), 3<span class="suit-h">♥</span> (min honor กระจาย), 3NT/4<span class="suit-h">♥</span> (max honor กระจาย)</p>
+                    <p><em>Hint: Short suit Game Try ควรจะมีทรัมพ์ยาวหน่อยเพราะเขามีชุดโจมตีทรัมพ์เราแล้ว</em></p>
+                    <p><strong>Example:</strong><br>
+                    1<span class="suit-c">♣</span>-1<span class="suit-d">♦</span> 2<span class="suit-h">♥</span><br>
+                    2<span class="suit-s">♠</span> asking<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;2NT: Honor <span class="suit-s">♠</span> or good <span class="suit-s">♠</span> &rarr; +1 ask min max<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;3<span class="suit-c">♣</span>: Honor <span class="suit-c">♣</span> or good &rarr; +1 ask min max<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;3<span class="suit-d">♦</span>: Honor <span class="suit-d">♦</span> with max<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;3<span class="suit-h">♥</span>: min honor กระจาย<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;3NT/4<span class="suit-h">♥</span>: max honor กระจาย<br>
+                    2NT: Game Try with short <span class="suit-s">♠</span><br>
+                    3m: Game Try with short m<br>
+                    3<span class="suit-h">♥</span>: ถ้าไม่ใช้จังหวะประมูลแย่งกัน จะใช้ ask honor <span class="suit-h">♥</span></p>
                 </div>
 
                 <div class="sub-section" id="resp-b">
                     <h3>B. Response Negative 1<span class="suit-s">♠</span></h3>
-                    <p><strong>นิยาม:</strong> แต้ม 6-10 ไม่มี M4 และไม่มี minor 6+</p>
-                    <p><strong>Opener rebid:</strong></p>
-                    <ul>
-                        <li>Pass (11-13 <span class="suit-s">♠</span>5)</li>
-                        <li>1NT (maybe 4-4-1-4) &rarr; Responder rebid: Pass, 2<span class="suit-c">♣</span> (NF <span class="suit-c">♣</span>5<span class="suit-d">♦</span>4), 2<span class="suit-d">♦</span> (NF <span class="suit-d">♦</span>5<span class="suit-c">♣</span>4)</li>
-                        <li>2<span class="suit-c">♣</span> (11-15 <span class="suit-c">♣</span>5)</li>
-                        <li>2<span class="suit-d">♦</span> (17-19 Bal or 16+ <span class="suit-d">♦</span>4<span class="suit-c">♣</span>5) &rarr; Responder rebid: Pass (0-5 <span class="suit-d">♦</span>5+), 2<span class="suit-h">♥</span> (ask min max then 2<span class="suit-s">♠</span> = <span class="suit-d">♦</span>4, 2NT = min Bal, 3NT = max Bal)</li>
-                        <li>2<span class="suit-h">♥</span> (15+ stop or suit then next step = bad hand, other = GF)</li>
-                        <li>2<span class="suit-s">♠</span> (16+ stop or suit then next step = bad hand, other = GF)</li>
-                        <li>2NT (16+ <span class="suit-c">♣</span>6 then 3<span class="suit-c">♣</span> = bad hand, other = GF)</li>
-                        <li>3<span class="suit-c">♣</span> (13-15 good <span class="suit-c">♣</span>6)</li>
-                    </ul>
+                    <p><strong>นิยาม:</strong> แต้ม 6-10 ไม่มี M4 และ ไม่มี minor 6+</p>
+                    <p><strong>Opener rebid:</strong><br>
+                    - Pass (11-13 <span class="suit-s">♠</span>5)<br>
+                    - 1NT: maybe 4-4-1-4 &rarr; Responder rebid: Pass, 2<span class="suit-c">♣</span> (NF <span class="suit-c">♣</span>5<span class="suit-d">♦</span>4), 2<span class="suit-d">♦</span> (NF <span class="suit-d">♦</span>5<span class="suit-c">♣</span>4)<br>
+                    - 2<span class="suit-c">♣</span>: 11-15 <span class="suit-c">♣</span>5<br>
+                    - 2<span class="suit-d">♦</span>: 17-19 Bal or 16+ <span class="suit-d">♦</span>4<span class="suit-c">♣</span>5 &rarr; Responder rebid: Pass (0-5 <span class="suit-d">♦</span>5+), 2<span class="suit-h">♥</span> (ask min max then 2<span class="suit-s">♠</span> = <span class="suit-d">♦</span>4, 2NT = min Balanced, 3NT = max Balanced)<br>
+                    - 2<span class="suit-h">♥</span>: 15+ stop or suit then next step = bad hand, other = GF<br>
+                    - 2<span class="suit-s">♠</span>: 16+ stop or suit then next step = bad hand, other = GF<br>
+                    - 2NT: 16+ <span class="suit-c">♣</span>6 then 3<span class="suit-c">♣</span> = bad hand, other = GF<br>
+                    - 3<span class="suit-c">♣</span>: 13-15 good <span class="suit-c">♣</span>6</p>
                 </div>
 
                 <div class="sub-section" id="resp-c">
                     <h3>C. Response 1NT Game Force Relay</h3>
-                    <p><strong>นิยาม:</strong> ไพ่แต้มเกมต้องการรู้ Shape คนเปิด (1<span class="suit-c">♣</span> - 1NT)</p>
-                    <p><strong>Opener rebid:</strong></p>
-                    <ul>
-                        <li><strong>2<span class="suit-c">♣</span>:</strong> Bal/444-1/544-0 (หลังจากนี้ +1 responder = Relay Bid เช่น 2<span class="suit-h">♥</span> = 4-4-1-4 เข้า RKC, 2<span class="suit-s">♠</span> = Balance <span class="suit-c">♣</span>4+ เป็นต้น)</li>
-                        <li><strong>2<span class="suit-d">♦</span>:</strong> Transfer <span class="suit-h">♥</span>4<span class="suit-c">♣</span>5 (เข้าสู่ Shape relay: Step 1 Short Hi <span class="suit-s">♠</span>, Step 2 Short Lo <span class="suit-d">♦</span>, Step 3 no short, Step 4 64, Step 5 55)</li>
-                        <li><strong>2<span class="suit-h">♥</span>:</strong> Transfer <span class="suit-s">♠</span>4<span class="suit-c">♣</span>5 (เข้าสู่ Shape relay)</li>
-                        <li><strong>2<span class="suit-s">♠</span>:</strong> Transfer <span class="suit-c">♣</span>6 (เข้าสู่ Shape relay: Step 1 have short +1 ask short HML, Step 2 no short +1 ask 3 cards LMH, Step 3 64)</li>
-                        <li><strong>2NT:</strong> Transfer <span class="suit-d">♦</span> short <span class="suit-s">♠</span></li>
-                        <li><strong>3<span class="suit-c">♣</span>:</strong> Transfer <span class="suit-d">♦</span> short <span class="suit-h">♥</span></li>
-                        <li><strong>3<span class="suit-d">♦</span>:</strong> Transfer <span class="suit-d">♦</span> No short</li>
-                    </ul>
-                    <p><em>Hint: Step 1-3 (2<span class="suit-d">♦</span>-2<span class="suit-s">♠</span>) คือ Transfer 3 ชุดแรก ก่อนใช้ Shape relay ระบุชุดสั้น / Step 4-6 (2NT+) คือ Transfer ชุดที่ 4 พร้อม Step Shape relay</em></p>
+                    <p><strong>นิยาม:</strong> ไพ่แต้มเกมต้องการรู้ Shape คนเปิด (1<span class="suit-c">♣</span> – 1NT)<br>
+                    <strong>Opener rebid:</strong><br>
+                    - 2<span class="suit-c">♣</span>: Bal/444-1/544-0 (หลังจากนี้ +1 from responder = Relay Bid)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;2<span class="suit-h">♥</span>: 4-4-1-4 ได้ shape ครบแล้ว เข้าสู่ RKC บิดชุดไหนถามเอชุดนั้น<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;2<span class="suit-s">♠</span>: Balance <span class="suit-c">♣</span>4+ (+1 relay bid: 3<span class="suit-c">♣</span> = Transfer <span class="suit-d">♦</span>, 3<span class="suit-d">♦</span> = Transfer <span class="suit-h">♥</span>, 3<span class="suit-h">♥</span> = Transfer <span class="suit-s">♠</span>, 3<span class="suit-s">♠</span> = 3-3-3-4, 3NT = <span class="suit-c">♣</span>5-332)<br>
+                    - 2<span class="suit-d">♦</span>: Transfer <span class="suit-h">♥</span>4<span class="suit-c">♣</span>5 ตอนนี้จะเข้าสู้ Shape relay (+1 relay bid: Step 1 Short Hi <span class="suit-s">♠</span>, Step 2 Short Lo <span class="suit-d">♦</span>, Step 3 no short, Step 4 64, Step 5 55)<br>
+                    - 2<span class="suit-h">♥</span>: Transfer <span class="suit-s">♠</span>4<span class="suit-c">♣</span>5 ตอนนี้จะเข้าสู้ Shape relay<br>
+                    - 2<span class="suit-s">♠</span>: Transfer <span class="suit-c">♣</span>6 ตอนนี้จะเข้าสู้ Shape relay (+1 relay bid: Step 1 have short +1 ask short HML, Step 2 no Short +1 ask 3 cards LMH, Step 3 64)<br>
+                    - 2NT: Transfer <span class="suit-d">♦</span> short <span class="suit-s">♠</span><br>
+                    - 3<span class="suit-c">♣</span>: Transfer <span class="suit-d">♦</span> short <span class="suit-h">♥</span><br>
+                    - 3<span class="suit-d">♦</span>: Transfer <span class="suit-d">♦</span> No short</p>
+                    <p><em>Hint: Step 1-3 (2<span class="suit-d">♦</span>-2<span class="suit-s">♠</span>) คือ Transfer 3 ชุดแรก ก่อนใช้ Shape relay ระบุชุดสั้น / Step 4-6 (2NT+) คือ Transfer ชุดที่ 4 พร้อม step Shape relay</em></p>
                 </div>
 
                 <div class="sub-section" id="resp-d">
                     <h3>D. Response Level 2</h3>
-                    <p>เนื่องจากการเปิด 1<span class="suit-c">♣</span> ไม่รู้ว่าชุด minors ไหนยาวกว่ากัน และบางครั้งยังมี M5332 เมื่อมีแต้มชวนเกมไม่มี M4:</p>
-                    <ul>
-                        <li><strong>2<span class="suit-c">♣</span> (Transfer <span class="suit-d">♦</span>):</strong> NF <span class="suit-d">♦</span>6 or GI+ <span class="suit-d">♦</span>5+ &rarr; Opener rebid 2<span class="suit-d">♦</span> (min waiting) หรือ 2<span class="suit-h">♥</span> (ART 14+ any)</li>
-                        <li><strong>2<span class="suit-d">♦</span> (GI <span class="suit-c">♣</span>5+):</strong> Game invited promise <span class="suit-c">♣</span>5 &rarr; Opener rebid 2<span class="suit-h">♥</span> (ART 14+ any GF now natural) หรือ Other (NF)</li>
-                        <li><strong>2<span class="suit-h">♥</span> (GI Balanced):</strong> Opener rebid 2<span class="suit-s">♠</span> (ART puppet to 2NT) หรือ Other (GI)</li>
-                    </ul>
+                    <p>เนื่องจากการเปิด 1<span class="suit-c">♣</span> ไม่รู้ว่าชุด minors ไหนยาวกว่ากัน บางครั้งยังมี M5332 ตอนมีแต้มชวนเกม ไม่มี M4:<br>
+                    2<span class="suit-c">♣</span> = GI+ <span class="suit-d">♦</span>5+ or NF <span class="suit-d">♦</span>6<br>
+                    2<span class="suit-d">♦</span> = GI+ <span class="suit-c">♣</span>5+</p>
+                    
+                    <p>• <strong>Response 2<span class="suit-c">♣</span> (Transfer <span class="suit-d">♦</span>)</strong><br>
+                    นิยาม: NF <span class="suit-d">♦</span>6 or GI+ <span class="suit-d">♦</span>5+<br>
+                    Opener rebid:<br>
+                    - 2<span class="suit-d">♦</span> (min waiting) &rarr; Responder rebid: Pass (NF <span class="suit-d">♦</span>6), 2<span class="suit-h">♥</span> (original GI <span class="suit-d">♦</span>5), 2<span class="suit-s">♠</span> (ART puppet to 2NT then pass/3NT = to play, Other = GF)<br>
+                    - 2<span class="suit-h">♥</span> (ART 14+ any) &rarr; Responder rebid: 2<span class="suit-s">♠</span> (less than GI <span class="suit-d">♦</span>6 บิดต่อถ้ามีแต้มMax), Other (original GI+ &rarr; GF now)</p>
+
+                    <p>• <strong>Response 2<span class="suit-d">♦</span> (GI <span class="suit-c">♣</span>5+)</strong><br>
+                    นิยาม: Game invited promise <span class="suit-c">♣</span>5<br>
+                    Opener rebid:<br>
+                    - 2<span class="suit-h">♥</span> (ART 14+ any GF now &rarr; natural bid)<br>
+                    - Other (NF)</p>
+
+                    <p>• <strong>Response 2<span class="suit-h">♥</span> (GI Balanced)</strong><br>
+                    Opener rebid:<br>
+                    - 2<span class="suit-s">♠</span> (ART puppet to 2NT then pass/3NT = to play, Other = GF)<br>
+                    - Other (GI)</p>
                 </div>
             </section>
 
@@ -451,16 +534,70 @@
                 
                 <div class="sub-section" id="ce1">
                     <h3>1. Transfer Response</h3>
-                    <p>ใช้หาชุด Major Fit หลังเปิด 1<span class="suit-c">♣</span> (1<span class="suit-c">♣</span>-1<span class="suit-d">♦</span> = Hearts, 1<span class="suit-c">♣</span>-1<span class="suit-h">♥</span> = Spades) &rarr; Transfer คือภาษาหลักของระบบ หลังจาก Transfer M Opener เช็ค Support และ Extra Values แล้วเลือก Bid ตามตาราง</p>
+                    <p>ใช้หาชุด Major Fit หลังเปิด 1<span class="suit-c">♣</span><br>
+                    1<span class="suit-c">♣</span>-1<span class="suit-d">♦</span> = Hearts<br>
+                    1<span class="suit-c">♣</span>-1<span class="suit-h">♥</span> = Spades<br>
+                    จำว่า Transfer คือภาษาหลักของระบบ<br>
+                    หลังจาก Transfer M</p>
+                    <p>Opener ถามตัวเองเพียง 2 ข้อ:<br>
+                    มี Support หรือไม่<br>
+                    มี Extra Values หรือไม่</p>
+                    <p>จากนั้นเลือก Bid ตามตาราง</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Rebid</th>
+                                <th>Meaning</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>1M</strong></td><td>Accept Transfer</td></tr>
+                            <tr><td><strong>1<span class="suit-s">♠</span></strong></td><td>Minimum Unbalanced</td></tr>
+                            <tr><td><strong>1NT</strong></td><td>Strong No-Fit</td></tr>
+                            <tr><td><strong>2<span class="suit-c">♣</span></strong></td><td>Natural Club</td></tr>
+                            <tr><td><strong>2M</strong></td><td>Medium Support</td></tr>
+                            <tr><td><strong>2M-1</strong></td><td>Strong Fit 3 เป็นตำแหน่งที่แน่นอน</td></tr>
+                            <tr><td><strong>2oM or 2M-1</strong></td><td>Strong Fit 4 แปรผันตาม Strong Fit 3</td></tr>
+                            <tr><td><strong>2NT</strong></td><td>NT Support</td></tr>
+                        </tbody>
+                    </table>
                 </div>
 
                 <div class="sub-section" id="ce2">
                     <h3>2. Transfer Checkback</h3>
-                    <p>ใช้หลังคนเปิด accept transfer 1M or rebid 1<span class="suit-s">♠</span> เพื่อแยก NF, GI, GF โดยไม่เสียพื้นที่ (Bid ระดับ 2 = Transfer)</p>
+                    <p>ใช้หลังคนเปิด accept transfer 1M or rebid 1<span class="suit-s">♠</span><br>
+                    เป้าหมาย:<br>
+                    • แยก NF<br>
+                    • GI<br>
+                    • GF<br>
+                    โดยยังไม่เสียพื้นที่<br>
+                    จำว่า Bid ระดับ 2 = Transfer<br>
+                    ตัวอย่าง:<br>
+                    1<span class="suit-c">♣</span> - 1<span class="suit-d">♦</span><br>
+                    1<span class="suit-h">♥</span></p>
+                    
+                    <p><strong>Transfer Check Back Structure</strong></p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Bid</th>
+                                <th>Meaning</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>2<span class="suit-c">♣</span></strong></td><td>Transfer <span class="suit-d">♦</span> NF or GI any</td></tr>
+                            <tr><td><strong>2<span class="suit-d">♦</span></strong></td><td>Transfer <span class="suit-h">♥</span> NF or GF</td></tr>
+                            <tr><td><strong>2<span class="suit-h">♥</span></strong></td><td>Transfer <span class="suit-s">♠</span> NF or GF</td></tr>
+                            <tr><td><strong>2<span class="suit-s">♠</span></strong></td><td>Transfer <span class="suit-c">♣</span> NF or GF</td></tr>
+                            <tr><td><strong>2NT</strong></td><td>Transfer <span class="suit-d">♦</span> NF or GF</td></tr>
+                        </tbody>
+                    </table>
+                    <p>ถ้าผ่านจะแสดงไพ่ NF ถ้าบิดต่อจะแสดงกำลังชวนเกมหรือเกมแล้ว</p>
                 </div>
 
                 <div class="sub-section" id="ce3">
                     <h3>3. Strong Fit Support</h3>
+                    <p>แบ่งไพ่เป็น 3 แบบตามตาราง</p>
                     <table>
                         <thead>
                             <tr>
@@ -475,27 +612,150 @@
                             <tr><td><strong>NT Fit 4</strong></td><td>4-card support Balanced</td><td>17+</td></tr>
                         </tbody>
                     </table>
+                    
+                    <p><strong>Strong Fit 3</strong><br>
+                    นิยาม: 16+, Support 3 ใบ, Unbalanced<br>
+                    ตัวอย่าง:<br>
+                    1<span class="suit-c">♣</span> - 1<span class="suit-d">♦</span><br>
+                    2<span class="suit-d">♦</span><br>
+                    Responder rebid:<br>
+                    - 2<span class="suit-h">♥</span> or 3<span class="suit-c">♣</span>: accept <span class="suit-h">♥</span> or accept <span class="suit-c">♣</span> ในระดับต่ำสุดบอกว่าไพ่อาจจะยังไม่เกม<br>
+                    - 2<span class="suit-s">♠</span>: 2M+1 เข้าสู่ Shape Relay เพื่อหาชุดสั้น<br>
+                    - 3<span class="suit-d">♦</span>: 3M-1 GI M5</p>
+
+                    <p><strong>Strong Fit 4</strong><br>
+                    นิยาม:<br>
+                    • 16+ HCP<br>
+                    • Support 4 ใบ<br>
+                    • Distribution เหมาะสำหรับสแลม<br>
+                    ตัวอย่าง:<br>
+                    1<span class="suit-c">♣</span> - 1<span class="suit-d">♦</span> or 1<span class="suit-c">♣</span> - 1<span class="suit-h">♥</span><br>
+                    2<span class="suit-s">♠</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2<span class="suit-d">♦</span><br>
+                    Responder rebid same as Strong Fit 3</p>
+
+                    <p><strong>NT Fit 4</strong><br>
+                    นิยาม: 17-19 Balanced Support 4 ใบ<br>
+                    1<span class="suit-c">♣</span> - 1<span class="suit-d">♦</span> หรือ 1<span class="suit-c">♣</span> - 1<span class="suit-h">♥</span> แล้วต่อด้วย 2NT<br>
+                    Responder rebid (เนื่องจาก 2NT Support ได้มีการบอกชุดทรัมพ์มาแล้ว):<br>
+                    - 3<span class="suit-c">♣</span> [+1 Relay] ถามชุด Doubleton &rarr; HML (เพราะการไปสแลมการรู้ doubleton สำคัญมาก)<br>
+                    - Transfer M ถ้าต้องการจะเดิน part score or game คล้ายกับเปิด 1NT</p>
                 </div>
 
                 <div class="sub-section" id="ce4">
-                    <h3>4. Strong No-Fit (Gazilli)</h3>
-                    <p>Gazilli เป็นเครื่องมือสำหรับมือแข็งที่ยังไม่พบ Majors Fit (16+ Unbalanced no M3 หรือ 17-19 Balanced no M4 หรือ 11-15 <span class="suit-d">♦</span>4+) เพื่อซ่อนลักษณะมือ แยก Minimum และ Extra Hands เข้าสู่ Shape Relay อย่างรวดเร็ว</p>
+                    <h3>4. Strong No-Fit</h3>
+                    <p><strong>แนวคิด:</strong> Gazilli เป็นเครื่องมือสำหรับมือแข็งที่ยังไม่พบ Majors Fit<br>
+                    ใช้เมื่อผู้เปิดมี:<br>
+                    • 16+ Unbalanced no M3 หรือ<br>
+                    • 17-19 Balanced no M4 or 11-15 <span class="suit-d">♦</span>4+<br>
+                    เป้าหมาย:<br>
+                    • ซ่อนลักษณะมือของผู้เปิด<br>
+                    • แยก Minimum และ Extra Hands<br>
+                    • เข้าสู่ Shape Relay อย่างรวดเร็ว<br>
+                    ตัวอย่าง:<br>
+                    1<span class="suit-c">♣</span> - 1<span class="suit-d">♦</span><br>
+                    1NT<br>
+                    Responder Rebid:<br>
+                    - 2<span class="suit-c">♣</span>: ART 8+<br>
+                    Opener rebid (Similar Game Force relay):<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;2<span class="suit-d">♦</span>: Transfer <span class="suit-h">♥</span> เนื่องจากไม่มีทางมี H4 จะกลายเป็น 17+ Balanced see below<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;2<span class="suit-h">♥</span>: Transfer <span class="suit-s">♠</span> จะเข้าสู้ Shape Relay<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;2<span class="suit-s">♠</span>: Transfer <span class="suit-c">♣</span> จะเข้าสู้ Shape Relay<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;2NT: Transfer <span class="suit-d">♦</span> short S<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;3<span class="suit-c">♣</span>: Transfer <span class="suit-d">♦</span> short <span class="suit-h">♥</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;3<span class="suit-d">♦</span>: Transfer <span class="suit-d">♦</span> no short<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;3<span class="suit-h">♥</span>: Transfer D 64<br>
+                    - 2<span class="suit-d">♦</span>: 5-7 no clear bid<br>
+                    - 2M: 5-7 M6<br>
+                    ส่วนขยายเพื่อหารูปไพ่กรณี Balanced:<br>
+                    1<span class="suit-c">♣</span> - 1<span class="suit-d">♦</span><br>
+                    1NT – 2<span class="suit-c">♣</span><br>
+                    2<span class="suit-d">♦</span> -<br>
+                    Responder rebid: +1 Relay bid (ตรงนี้ไปอ่านรายละเอียดเพิ่มเติมที่ Game Force Relay)<br>
+                    ถ้าไม่ได้สนใจจะไปสแลม จะเลือกบิดระดับ 3 แทน โดยใช้แนวคิดโครงสร้างของ NT Structure:<br>
+                    3<span class="suit-c">♣</span>: Shape Stayman see detail in NT structure<br>
+                    3<span class="suit-d">♦</span>: Transfer <span class="suit-h">♥</span><br>
+                    3NT: NF</p>
                 </div>
 
                 <div class="sub-section" id="ce5">
                     <h3>5. Game Force Relay</h3>
-                    <p>1<span class="suit-c">♣</span>-1NT และ 1M-2<span class="suit-c">♣</span> เพื่อต้องการรู้ Shape ของคนเปิดก่อนทราบแต้ม (Shape &rarr; Short &rarr; Control)</p>
+                    <p>ตอนเปิด minor ไพ่บางแบบที่แต้มเกมแล้ว:<br>
+                    • ไม่มี M4 และเหมาะสมจะเดิน NT จะบิดยากและควบคุมความเร็วของการประมูลได้ยาก<br>
+                    • มี M4 แต่ balanced เหมาะกับการเดิน การที่เรา response แบบปกติ ทำให้เปิดเผยข้อมูลมากเกินความจำเป็น บ่อยครั้งจะเดินผิดมือ<br>
+                    <strong>จุดประสงค์การทำ Game Force Relay:</strong> เพราะเราต้องการรู้ Shape ของคนเปิดก่อน ยังไม่ได้ต้องการรู้แต้ม (Shape &rarr; Short &rarr; control)<br>
+                    เราจะประกาศ Game Force Relay 2 แบบ:<br>
+                    • 1<span class="suit-c">♣</span> – 1NT = Game Force Relay<br>
+                    • 1M - 2<span class="suit-c">♣</span> = Game Force Relay<br>
+                    เพื่อแสดงว่าตอนนี้ไพ่เข้าสู้ระดับเกมแล้ว ให้คนเปิดบอก Shape มา</p>
+
+                    <p><strong>Game Force Relay Structure</strong><br>
+                    1<span class="suit-c">♣</span> – 1NT<br>
+                    Opener rebid:<br>
+                    2<span class="suit-c">♣</span>: Bal/444-1/544-0<br>
+                    2<span class="suit-d">♦</span>: Transfer <span class="suit-h">♥</span>4<span class="suit-c">♣</span>5 ตอนนี้จะเข้าสู้ Shape relay<br>
+                    2<span class="suit-h">♥</span>: Transfer <span class="suit-s">♠</span>4<span class="suit-c">♣</span>5 ตอนนี้จะเข้าสู้ Shape relay<br>
+                    2<span class="suit-s">♠</span>: Transfer <span class="suit-c">♣</span>6 ตอนนี้จะเข้าสู้ Shape relay<br>
+                    2NT: Transfer <span class="suit-d">♦</span> short <span class="suit-s">♠</span><br>
+                    3<span class="suit-c">♣</span>: Transfer <span class="suit-d">♦</span> short <span class="suit-h">♥</span><br>
+                    3<span class="suit-d">♦</span>: Transfer <span class="suit-d">♦</span> No short<br>
+                    <em>Hint: Step 1-3 (2<span class="suit-d">♦</span>-2<span class="suit-s">♠</span>) คือ transfer 3 ชุดแรก ก่อนใช้ shape relay / Step 4-6 (2NT+) คือ Transfer ชุดที่ 4 พร้อม step Shape relay</em></p>
                 </div>
 
                 <div class="sub-section" id="ce6">
                     <h3>6. Shape Relay Structure</h3>
-                    <p><strong>Structure 54:</strong> Step 1 (Short High), Step 2 (Short Lower), Step 3 (No short 5422), Step 4 (64), Step 5 (55)<br>
-                    <strong>Structure 6+:</strong> Step 1 (Have Short &rarr; ask HML), Step 2 (No short), Step 3-5 (64 low/medium/high)</p>
+                    <p>เมื่อเรารู้โครงสร้างหลักเป็น 54 หรือ 6+ เราจะมี Shape relay 2 แบบ:</p>
+                    <p><strong>• Structure 54</strong> (After +1 relay Bid):<br>
+                    Step 1: Short High remain suit<br>
+                    Step 2: Short Lower remain suit<br>
+                    Step 3: no short 5422<br>
+                    Step 4: 64<br>
+                    Step 5: 55<br>
+                    <em>(ถ้า step ไหนเป็นไปไม่ได้ ให้เลื่อน step ต่อไปขึ้นมาตอบแทน)</em></p>
+                    <p><strong>• Structure 6+</strong> (After +1 relay Bid):<br>
+                    Step 1: have Short +1 ask short HML<br>
+                    Step 2: no short<br>
+                    Step 3: 64 low suit<br>
+                    Step 4: 64 medium suit<br>
+                    Step 5: 64 high suit</p>
                 </div>
 
                 <div class="sub-section" id="ce7">
-                    <h3>7. Slam Convention</h3>
-                    <p>Roman Key Cards และ Recycle with Void ในการถาม Key Cards ด้านล่าง 4 Majors และ 4<span class="suit-s">♠</span>/4NT พร้อมการตอบสนองตาม Step, ถาม Trump Q และ Asking K รวมถึงการจัดการ Noise (DOPI/REPO)</p>
+                    <h3>7. SLAM CONVENTION</h3>
+                    <p><strong>"ROMAN KEY CARDS" and "RECYCLE WITH VOID"</strong><br>
+                    When ask key cards below 4 majors:<br>
+                    Step 1: Min or not support<br>
+                    Step 2: 0 or 3 Keycards, not min [4A + 1K trump = 5 key cards]<br>
+                    Step 3: 1 or 4 Key cards, not min<br>
+                    Step 4: 2 or 5 Key cards no trump Q, not min<br>
+                    Step 5: 2 or 5 Key cards with trump Q, not min<br>
+                    Step 6-9: same as step 2-4 with useful void [Recycle with void]<br>
+                    When ask key cards with 4<span class="suit-s">♠</span> or 4NT &rarr; step 1/2/3/4 = 03/14/25 no Q / 25 w Q<br>
+                    <em>After Shape Relay usually 3M = RKC trump M</em></p>
+
+                    <p><strong>A. AFTER ANSWER Min or not support</strong><br>
+                    Next step: re asking<br>
+                    Bid Trump: to play</p>
+
+                    <p><strong>B. AFTER ANSWER 0/3 or 1/4 KEY CARDS</strong><br>
+                    Next step: asking trump Q [step 2 ask K (promise trump Q)]<br>
+                    - cheaper trump: no trump Q<br>
+                    - jump to trump: have trump Q and no K<br>
+                    - Suit: trump Q + K of bid suits up the line<br>
+                    - cheaper NT: trump Q + K of far suits<br>
+                    After answer Q: Next step asking more feature for grand slam<br>
+                    5NT: ask special in suit of next step bid<br>
+                    Other: ask special K in bid suits.<br>
+                    Step 2: promise trump Q and ask for K &rarr; Show K up the line, NT = far K<br>
+                    Trump: to play</p>
+
+                    <p><strong>C. AFTER ANSWER 2/5 no Q and 2/5 with Q</strong><br>
+                    Next step: asking K &rarr; same as AFTER answer Q</p>
+
+                    <p><strong>WHEN NOISE AFTER ASK KEY CARDS</strong><br>
+                    DOPI/REPO: Double or RDBL = step 1, Pass = step 2, ...</p>
+                    <p><strong>WHEN DOUBLE GUIDE LEAD AFTER ANSWER KEY CARDS</strong><br>
+                    Pass = worry about this suit &rarr; partner RDBL = don’t worry, bid trump = S/O<br>
+                    Bid trump = sign off</p>
                 </div>
             </section>
         </main-content>
