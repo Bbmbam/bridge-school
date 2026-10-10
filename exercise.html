@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bridge Bidding Practice Academy</title>
+    <style>
+        :root {
+            --primary: #1b4332;
+            --secondary: #2d6a4f;
+            --accent: #52b788;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-main: #212529;
+            --suit-red: #d90429;
+            --suit-black: #212529;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.7;
+        }
+        .suit-s { color: var(--suit-black); font-weight: bold; }
+        .suit-h { color: var(--suit-red); font-weight: bold; }
+        .suit-d { color: var(--suit-red); font-weight: bold; }
+        .suit-c { color: var(--suit-black); font-weight: bold; }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        header h1 { font-size: 1.8rem; margin: 0 0 5px 0; }
+        header p { font-style: italic; opacity: 0.9; margin: 0; }
+
+        .top-nav-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1000px;
+            margin: 20px auto 0 auto;
+            padding: 0 20px;
+        }
+        .nav-btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background: var(--secondary);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            transition: 0.3s;
+        }
+        .nav-btn:hover { background: var(--primary); }
+
+        .container {
+            max-width: 1000px;
+            margin: 20px auto 40px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-top: 5px solid var(--accent);
+            margin-bottom: 25px;
+        }
+        
+        .view-section { display: none; }
+        .view-section.active { display: block; }
+
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .form-group label {
+            font-weight: bold;
+            color: var(--primary);
+            display: block;
+            margin-bottom: 5px;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.2s;
+        }
+        .btn-primary:hover { background: var(--secondary); }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .cat-card {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .cat-card:hover {
+            border-color: var(--accent);
+            background: #e8f5e9;
+            transform: translateY(-3px);
+        }
+        .cat-card h3 { color: var(--primary); margin: 0 0 10px 0; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #dee2e6; font-size: 0.95rem; }
+        th { background: #f1f3f5; color: var(--primary); }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            background: #e9ecef;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        .hand-box {
+            background: #f8f9fa;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .option-btn {
+            padding: 12px 15px;
+            background: white;
+            border: 2px solid var(--secondary);
+            color: var(--secondary);
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: center;
+        }
+        .option-btn:hover:not(:disabled) { background: var(--secondary); color: white; }
+        .option-btn.correct { background: #2b9348 !important; border-color: #2b9348 !important; color: white !important; }
+        .option-btn.wrong { background: #d90429 !important; border-color: #d90429 !important; color: white !important; }
+        
+        .feedback-box {
+            display: none;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .feedback-box.correct { background: #d8f3dc; color: #1b4332; border: 1px solid #b7e4c7; }
+        .feedback-box.wrong { background: #ffe5ec; color: #9b2226; border: 1px solid #ffb3c1; }
+        .next-btn {
+            display: none;
+            margin-top: 20px;
+            padding: 10px 25px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Bridge Bidding Practice Academy</h1>
+        <p>ระบบฝึกซ้อมประมูลไพ่แยกหมวดหมู่ บัญชีส่วนตัว และตารางจัดอันดับ</p>
+    </header>
+
+    <div class="top-nav-bar">
+        <a href="index.html" class="nav-btn">&larr; กลับหน้าหลัก</a>
+        <a href="convention.html" class="nav-btn">เปิดดูคู่มือ Convention &rarr;</a>
+    </div>
+
+    <div class="container">
+
+        <!-- 1. หน้า Login / ลงทะเบียน (ชื่อเล่น + รหัสผ่าน) -->
+        <div id="viewLogin" class="card view-section active">
+            <h2>🔐 เข้าสู่ระบบ / ลงทะเบียนผู้ใช้งาน</h2>
+            <p>กรอกชื่อเล่นและรหัสผ่านส่วนตัว เพื่อป้องกันข้อมูลสถิติซ้ำซ้อน:</p>
+            
+            <div class="form-group">
+                <label>ชื่อเล่น:</label>
+                <input type="text" id="usernameInput" placeholder="เช่น กริช, โน้ต, บอย...">
+            </div>
+            
+            <div class="form-group">
+                <label>รหัสผ่านส่วนตัว (PIN หรือรหัสผ่าน):</label>
+                <input type="password" id="passwordInput" placeholder="รหัสผ่านสำหรับเข้าบัญชีของคุณ...">
+            </div>
+
+            <button class="btn-primary" onclick="handleAuth()">เข้าสู่ระบบ / สมัครสมาชิก</button>
+            <p style="font-size: 0.85rem; color: #6c757d; margin-top: 10px; text-align: center;">
+                *หากยังไม่เคยสมัคร ระบบจะสร้างบัญชีใหม่ให้อัตโนมัติด้วยชื่อและรหัสนี้
+            </p>
+        </div>
+
+        <!-- 2. หน้าเมนูหลัก (Dashboard) -->
+        <div id="viewDashboard" class="card view-section">
+            <h2>สวัสดีคุณ <span id="displayName" style="color: var(--secondary);"></span>!</h2>
+            <div id="userStatsSummary" style="background: #e8f5e9; padding: 15px; border-radius: 8px; margin: 15px 0; color: var(--primary); font-weight: bold;">
+                <!-- สถิติส่วนตัว -->
+            </div>
+
+            <h3>เลือกหมวดหมู่ที่ต้องการฝึกซ้อม:</h3>
+            <div class="category-grid">
+                <div class="cat-card" onclick="startQuiz('opening')">
+                    <h3>Opening Bid</h3>
+                    <p>ฝึกการประมูลเปิดไพ่ตามระบบ</p>
+                </div>
+                <div class="cat-card" onclick="startQuiz('response')">
+                    <h3>Response Bid</h3>
+                    <p>ฝึกการตอบสนองเมื่อคู่ขาเปิด 1♣</p>
+                </div>
+                <div class="cat-card" onclick="startQuiz('openerRebid')">
+                    <h3>Opener Rebid</h3>
+                    <p>การประมูลรอบสองของคนเปิด</p>
+                </div>
+                <div class="cat-card" onclick="startQuiz('responderRebid')">
+                    <h3>Responder Rebid</h3>
+                    <p>การประมูลรอบสองของคนตอบ</p>
+                </div>
+                <div class="cat-card" onclick="startQuiz('full')" style="grid-column: span auto; background: #e2f0d9;">
+                    <h3>🌟 ฝึกแบบเต็มระบบ</h3>
+                    <p>รวมทุกสถานการณ์วัดใจ</p>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 30px;">🏆 ตารางจัดอันดับผู้ฝึกซ้อมสูงสุด (Leaderboard)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>อันดับ</th>
+                        <th>ชื่อผู้ฝึกซ้อม</th>
+                        <th>รอบที่ฝึก</th>
+                        <th>คะแนนรวม</th>
+                        <th>ความแม่นยำเฉลี่ย</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboardBody"></tbody>
+            </table>
+            
+            <button class="btn-primary" style="background: #6c757d; margin-top: 20px;" onclick="logout()">ออกจากระบบ</button>
+        </div>
+
+        <!-- 3. หน้าห้องทำแบบฝึกหัด (Quiz Room) -->
+        <div id="viewQuiz" class="card view-section">
+            <div class="stats-bar">
+                <span id="quizCategoryTitle">หมวดหมู่: -</span>
+                <span id="questionCount">ข้อที่: 1 / 5</span>
+                <span id="scoreCount">คะแนน: 0</span>
+            </div>
+
+            <div class="hand-box" id="handDisplay"></div>
+
+            <p style="font-weight: bold; color: var(--primary);">ท่านควรจะประมูล (Bid) อย่างไร?</p>
+
+            <div class="options-grid" id="optionsContainer"></div>
+
+            <div class="feedback-box" id="feedbackBox"></div>
+            
+            <button class="next-btn" id="nextBtn" onclick="nextQuestion()">ข้อถัดไป &rarr;</button>
+            <button class="next-btn" id="quitBtn" style="background: #6c757d; display: inline-block; margin-left: 10px;" onclick="returnToDashboard()">กลับหน้าหลัก</button>
+        </div>
+
+    </div>
+
+    <script>
+        const questionBank = {
+            opening: [
+                {
+                    hand: "♠ K Q 7 4 3<br>♥ A K 5<br>♦ 8 3<br>♣ 9 4",
+                    hcp: 14, shape: "5-3-2-3 (5M)", scenario: "ผู้เปิด (Dealer) ไม่มีใครเปิดมาก่อน",
+                    options: ["1♠", "1NT", "1♣", "Pass"], answer: "1♠",
+                    explanation: "มี 14 HCP และมีชุดโพดำ (♠) ยาว 5 ใบ เปิดสีหลักยาว 5 ใบก่อน (1♠)"
+                },
+                {
+                    hand: "♠ 8 2<br>♥ K Q J 7 4<br>♦ A K Q 5<br>♣ 6 3",
+                    hcp: 15, shape: "2-5-4-2", scenario: "ผู้เปิด (Dealer) ไม่มีใครเปิดมาก่อน",
+                    options: ["1♥", "1♦", "1NT", "2♦"], answer: "1♥",
+                    explanation: "มี 15 HCP มีชุดโพแดงยาว 5 ใบ เปิด 1♥ ตามมาตรฐาน"
+                }
+            ],
+            response: [
+                {
+                    hand: "♠ 6 3<br>♥ A 9 8 5 2<br>♦ K J 7<br>♣ Q 8 4",
+                    hcp: 10, shape: "2-5-3-3", scenario: "คู่ขาเปิดประมูล 1♣ คุณจะตอบว่าอะไร?",
+                    options: ["1♦ (Transfer ♥)", "1♥ (Transfer ♠)", "1NT", "Pass"], answer: "1♦ (Transfer ♥)",
+                    explanation: "ระบบ Low-Info Transfer Club: เปิด 1♣ มี 4+ ♥ ให้ใช้ 1♦ เป็น Transfer หาโพแดง"
+                }
+            ],
+            openerRebid: [
+                {
+                    hand: "♠ A K 5 3<br>♥ K Q 7 4<br>♦ 8 3<br>♣ 9 4",
+                    hcp: 14, shape: "4-4-3-2", scenario: "คุณเปิด 1♣ คู่ขาตอบ 1♦ (Transfer ♥) คุณจะประมูลรอบสองว่าอย่างไร?",
+                    options: ["1♥ (Accept Transfer)", "1NT", "2♣", "2♥"], answer: "1♥ (Accept Transfer)",
+                    explanation: "มี Support โพแดง 2+ ใบ ให้ Accept Transfer ด้วยการบิด 1♥"
+                }
+            ],
+            responderRebid: [
+                {
+                    hand: "♠ 6 3<br>♥ A K J 8 5 2<br>♦ K J 7<br>♣ 8 4",
+                    hcp: 11, shape: "2-6-3-2", scenario: "1♣ - 1♦ (Transfer ♥) <br> 1♥ - ? คุณจะประมูลต่ออย่างไร?",
+                    options: ["2♦ (Transfer Checkback / GI)", "Pass", "4♥", "3♥"], answer: "2♦ (Transfer Checkback / GI)",
+                    explanation: "ใช้ Transfer Checkback ระดับ 2 เพื่อเช็คความแรงและรูปแบบไพ่ต่อโดยไม่เสียพื้นที่"
+                }
+            ]
+        };
+
+        let currentAccount = null;
+        let currentCategory = '';
+        let activeQuestions = [];
+        let qIndex = 0;
+        let currentScore = 0;
+        let correctCount = 0;
+
+        function handleAuth() {
+            const name = document.getElementById('usernameInput').value.trim();
+            const pass = document.getElementById('passwordInput').value.trim();
+
+            if (!name || !pass) {
+                alert('กรุณากรอกทั้งชื่อเล่นและรหัสผ่านให้ครบถ้วนครับ');
+                return;
+            }
+
+            let accounts = JSON.parse(localStorage.getItem('bridge_accounts') || '{}');
+
+            if (accounts[name]) {
+                // มีบัญชีนี้อยู่แล้ว เช็ครหัสผ่าน
+                if (accounts[name] === pass) {
+                    currentAccount = name;
+                    localStorage.setItem('bridge_logged_user', currentAccount);
+                    initDashboard();
+                } else {
+                    alert('รหัสผ่านไม่ถูกต้อง! กรุณาลองใหม่อีกครั้ง');
+                }
+            } else {
+                // สมัครบัญชีใหม่
+                accounts[name] = pass;
+                localStorage.setItem('bridge_accounts', JSON.stringify(accounts));
+                
+                currentAccount = name;
+                localStorage.setItem('bridge_logged_user', currentAccount);
+                alert(`สร้างบัญชีใหม่ให้คุณ "${name}" เรียบร้อยแล้ว!`);
+                initDashboard();
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('bridge_logged_user');
+            currentAccount = null;
+            document.getElementById('usernameInput').value = '';
+            document.getElementById('passwordInput').value = '';
+            showView('viewLogin');
+        }
+
+        function showView(viewId) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+        }
+
+        function initDashboard() {
+            showView('viewDashboard');
+            document.getElementById('displayName').innerText = currentAccount;
+
+            let stats = getUserStats(currentAccount);
+            document.getElementById('userStatsSummary').innerHTML = `
+                📊 สถิติส่วนตัวของคุณ: ฝึกไปแล้ว <strong>${stats.totalSessions} รอบ</strong> | 
+                ทำข้อสอบรวม <strong>${stats.totalQuestions} ข้อ</strong> | 
+                ความแม่นยำเฉลี่ย: <strong>${stats.avgAccuracy}%</strong>
+            `;
+
+            renderLeaderboard();
+        }
+
+        function getUserStats(username) {
+            let allData = JSON.parse(localStorage.getItem('bridge_user_stats') || '{}');
+            return allData[username] || { totalSessions: 0, totalQuestions: 0, totalCorrect: 0, avgAccuracy: 0, totalScore: 0 };
+        }
+
+        function saveUserStats(username, sessionScore, sessionTotal, sessionCorrect) {
+            let allData = JSON.parse(localStorage.getItem('bridge_user_stats') || '{}');
+            if (!allData[username]) {
+                allData[username] = { totalSessions: 0, totalQuestions: 0, totalCorrect: 0, totalScore: 0, avgAccuracy: 0 };
+            }
+            let user = allData[username];
+            user.totalSessions += 1;
+            user.totalQuestions += sessionTotal;
+            user.totalCorrect += sessionCorrect;
+            user.totalScore += sessionScore;
+            user.avgAccuracy = Math.round((user.totalCorrect / user.totalQuestions) * 100);
+
+            localStorage.setItem('bridge_user_stats', JSON.stringify(allData));
+        }
+
+        function renderLeaderboard() {
+            let allData = JSON.parse(localStorage.getItem('bridge_user_stats') || '{}');
+            let users = Object.keys(allData).map(name => ({
+                name: name,
+                sessions: allData[name].totalSessions,
+                score: allData[name].totalScore || 0,
+                accuracy: allData[name].avgAccuracy || 0
+            }));
+
+            users.sort((a, b) => b.score - a.score);
+
+            let tbody = document.getElementById('leaderboardBody');
+            tbody.innerHTML = '';
+
+            if (users.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #6c757d;">ยังไม่มีข้อมูลผู้ฝึกซ้อม เป็นคนแรกที่เริ่มเลย!</td></tr>`;
+                return;
+            }
+
+            users.forEach((u, index) => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : index + 1}</td>
+                    <td><strong>${u.name}</strong></td>
+                    <td>${u.sessions} รอบ</td>
+                    <td>${u.score} คะแนน</td>
+                    <td>${u.accuracy}%</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function startQuiz(category) {
+            currentCategory = category;
+            if (category === 'full') {
+                activeQuestions = [...questionBank.opening, ...questionBank.response, ...questionBank.openerRebid, ...questionBank.responderRebid];
+                document.getElementById('quizCategoryTitle').innerText = "หมวดหมู่: ฝึกแบบเต็มระบบ";
+            } else {
+                activeQuestions = [...(questionBank[category] || questionBank.opening)];
+                document.getElementById('quizCategoryTitle').innerText = `หมวดหมู่: ${category.toUpperCase()}`;
+            }
+
+            activeQuestions.sort(() => Math.random() - 0.5);
+            activeQuestions = activeQuestions.slice(0, 5);
+
+            qIndex = 0;
+            currentScore = 0;
+            correctCount = 0;
+
+            showView('viewQuiz');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const q = activeQuestions[qIndex];
+            document.getElementById("questionCount").innerText = `ข้อที่: ${qIndex + 1} / ${activeQuestions.length}`;
+            document.getElementById("scoreCount").innerText = `คะแนน: ${currentScore}`;
+
+            document.getElementById("handDisplay").innerHTML = `
+                <strong>แต้ม (HCP):</strong> ${q.hcp} HCP | <strong>ทรงไพ่ (Shape):</strong> ${q.shape}<br>
+                <strong>สถานการณ์:</strong> ${q.scenario}<br><br>
+                <strong>มือไพ่ของคุณ:</strong><br>${q.hand}
+            `;
+
+            const optContainer = document.getElementById("optionsContainer");
+            optContainer.innerHTML = "";
+
+            let shuffledOpts = [...q.options].sort(() => Math.random() - 0.5);
+            shuffledOpts.forEach(opt => {
+                const btn = document.createElement("button");
+                btn.className = "option-btn";
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(opt, q.answer, q.explanation);
+                optContainer.appendChild(btn);
+            });
+
+            document.getElementById("feedbackBox").style.display = "none";
+            document.getElementById("nextBtn").style.display = "none";
+        }
+
+        function checkAnswer(selected, correct, explanation) {
+            const buttons = document.querySelectorAll(".option-btn");
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                if (btn.innerText === correct) btn.classList.add("correct");
+                if (btn.innerText === selected && selected !== correct) btn.classList.add("wrong");
+            });
+
+            const fb = document.getElementById("feedbackBox");
+            fb.style.display = "block";
+
+            if (selected === correct) {
+                fb.className = "feedback-box correct";
+                fb.innerHTML = `<strong>ถูกต้องครับ!</strong><br>${explanation}`;
+                currentScore += 10;
+                correctCount += 1;
+            } else {
+                fb.className = "feedback-box wrong";
+                fb.innerHTML = `<strong>ยังไม่ถูกต้องครับ!</strong> คำตอบที่ถูกคือ <strong>${correct}</strong><br>${explanation}`;
+            }
+
+            document.getElementById("scoreCount").innerText = `คะแนน: ${currentScore}`;
+            document.getElementById("nextBtn").style.display = "inline-block";
+        }
+
+        function nextQuestion() {
+            qIndex++;
+            if (qIndex < activeQuestions.length) {
+                loadQuestion();
+            } else {
+                saveUserStats(currentAccount, currentScore, activeQuestions.length, correctCount);
+                alert(`ยอดเยี่ยมมากครับ! คุณทำแบบฝึกหัดชุดนี้เสร็จแล้ว\nคะแนนรวม: ${currentScore} คะแนน (ตอบถูก ${correctCount}/${activeQuestions.length} ข้อ)`);
+                initDashboard();
+            }
+        }
+
+        function returnToDashboard() {
+            if (confirm("คุณต้องการออกจากการฝึกซ้อมนี้หรือไม่? คะแนนจะไม่ถูกบันทึก")) {
+                initDashboard();
+            }
+        }
+
+        window.onload = function() {
+            let loggedUser = localStorage.getItem('bridge_logged_user');
+            if (loggedUser) {
+                currentAccount = loggedUser;
+                initDashboard();
+            } else {
+                showView('viewLogin');
+            }
+        };
+    </script>
+
+</body>
+</html>
