@@ -1,5 +1,5 @@
 // ==========================================
-// AI HELPER WITH SECURE ENVIRONMENT INJECTION
+// AI HELPER WITH FULL RULES & COACH PERSONALITY
 // ==========================================
 
 const EMBEDDED_GEMINI_KEY = "__GEMINI_API_KEY_PLACEHOLDER__";
@@ -7,26 +7,20 @@ const EMBEDDED_GEMINI_KEY = "__GEMINI_API_KEY_PLACEHOLDER__";
 async function askBridgeAI(promptText) {
     const apiKey = EMBEDDED_GEMINI_KEY;
 
-    let engineRulesCode = "";
-    if (typeof opening_bid === 'function') engineRulesCode += "\n[Opening Bid Rules]:\n" + opening_bid.toString();
-    if (typeof response_1c === 'function') engineRulesCode += "\n[Response 1C Rules]:\n" + response_1c.toString();
-    if (typeof response_1d === 'function') engineRulesCode += "\n[Response 1D Rules]:\n" + response_1d.toString();
-    if (typeof response_1major === 'function') engineRulesCode += "\n[Response Major Rules]:\n" + response_1major.toString();
-    if (typeof response_1nt === 'function') engineRulesCode += "\n[Response 1NT Rules]:\n" + response_1nt.toString();
-
-     const systemContext = `
+    // ยัดกฎและคู่มือระบบบริดจ์ฉบับเต็ม + คาแรคเตอร์น้องบริดจ์ไว้ที่นี่แบบครบถ้วน
+    const systemContext = `
     คุณคือ "น้องบริดจ์" (AI Coach สาวสุดน่ารัก อารมณ์ดี และเป็นกันเองสุดๆ) ผู้เชี่ยวชาญกีฬาบริดจ์ 
-    หน้าที่ของคุณคือช่วยสรุปผลการฝึกซ้อมและอธิบายเฉลยการประมูลไพ่ตามระบบ "Shape Before Strength Engine V1" ที่กำหนดไว้ด้านล่างนี้อย่างเคร่งครัด:
+    หน้าที่ของคุณคือช่วยอธิบายเฉลยการประมูลไพ่ตามระบบ "Shape Before Strength Engine V1" อย่างเคร่งครัด:
 
     🎀 คาแรคเตอร์และการพูดจาของคุณ:
     - พูดจาเป็นกันเองสุดๆ มีหางเสียงน่ารักๆ เช่น "ค่ะ", "จ้าาา", "นะค้า", "สู้ๆ น้าาา" 
     - ใส่ Emoji ประกอบข้อความตลอดเวลา (เช่น 🎴, ✨, 🤖, 🥰, 💖, 💪, 🎯) เพื่อให้ดูมีชีวิตชีวา
     - เวลาให้คำแนะนำ ให้เน้นให้กำลังใจและชมเชยผู้เล่นเสมอ ห้ามดุเด็ดขาด!
+    - อธิบายสั้นกระชับเข้าใจง่าย ไม่อ้อมค้อม
 
     ========================================
     📖 คู่มือระบบบริดจ์ (System Rules & Engine V1):
     ========================================
-
     [Fundamental Rules]:
     - Rule 1: Transfer First (เมื่อมีโอกาสใช้ Transfer ให้ใช้ Transfer ก่อน เพื่อหา Major Fit เร็ว, เก็บพื้นที่, ซ่อนมือคนเปิด)
     - Rule 2: Shape Before Strength (ก่อนถามแต้มให้หารูปทรงไพ่ก่อน Fit -> Shape -> Shortness -> Control -> Strength)
@@ -56,25 +50,32 @@ async function askBridgeAI(promptText) {
     - Opener Rebid หลัง Transfer: Accept 1M (support 2+), 1S (Min Unbalanced), 1NT (Strong No-Fit), 2♣ (Natural Club), 2M (Medium Support), Strong Fit 3/4 หรือ NT Fit 4
     `;
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
     try {
         let response = await fetch(url, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                contents: [{ parts: [{ text: systemContext + "\n\nข้อมูลและคำถามจากผู้ใช้งาน: " + promptText }] }]
+                contents: [
+                    {
+                        parts: [
+                            { text: systemContext + "\n\nข้อมูลและคำถามจากผู้ใช้งาน: " + promptText }
+                        ]
+                    }
+                ]
             })
         });
 
         let data = await response.json();
-        if (data.candidates && data.candidates[0].content) {
+        if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts) {
             return data.candidates[0].content.parts[0].text;
         } else {
-            return "อุ๊ย! น้องบริดจ์ขออภัยด้วยนะคะ ระบบขัดข้องนิดหน่อย ลองใหม่อีกรอบน้าาา 😅";
+            console.error("API Response Error:", data);
+            return "อุ๊ย! น้องบริดจ์ขออภัยด้วยนะคะ ขออีกรอบน้าาา 😅";
         }
     } catch (error) {
-        console.error("AI Error:", error);
+        console.error("AI Fetch Error:", error);
         return "เชื่อมต่อ AI ไม่สำเร็จค่ะ ลองใหม่อีกทีน้าาา 🥺";
     }
 }
