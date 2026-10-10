@@ -80,7 +80,7 @@ RESPONSE STYLE:
         }
 
         if (data.text) {
-            return data.text;
+            return data.text.replace(/\*\*/g, "").trim();
         }
 
         console.error("Unexpected Worker response:", data);
