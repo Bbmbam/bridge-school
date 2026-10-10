@@ -849,15 +849,22 @@
             document.getElementById('scoreCount').innerText = `ถูก: ${correctAnswersCount}/${currentQIndex}`;
             document.getElementById('submitBtn').disabled = true;
 
-            // ให้ AI (น้องบริดจ์) เขียนคำอธิบายสั้นๆ น่ารักๆ ตามกฎ Engine V1
+            // ส่งข้อมูลโจทย์ ไพ่ในมือ และคำตอบของผู้เล่นไปให้ AI วิเคราะห์อย่างแม่นยำ
             let promptText = `
-            ผู้เล่นตอบข้อนี้: ${userAns} 
-            คำตอบที่ถูกต้องตามระบบ Engine V1 คือ: ${correctAns} 
-            สถานะ: ${isCorrect ? "ตอบถูกค่ะ" : "ตอบผิดค่ะ"}
-            ข้อมูลมือไพ่ข้อนี้: แต้ม ${currentHandData.hcp} HCP, ทรงไพ่ ${currentHandData.shape} (สเปด:${currentHandData.s}, ฮาร์ท:${currentHandData.h}, ข้าวหลามตัด:${currentHandData.d}, ดอกจิก:${currentHandData.c})
-            หลักการเดิม: ${currentHandData.exp}
+            โจทย์สถานการณ์: ${document.getElementById('scenarioText').innerText}
+            หน้าไพ่ในมือ:
+            - Spades ♠: ${currentHandData.sCards} (${currentHandData.s} ใบ)
+            - Hearts ♥: ${currentHandData.hCards} (${currentHandData.h} ใบ)
+            - Diamonds ♦: ${currentHandData.dCards} (${currentHandData.d} ใบ)
+            - Clubs ♣: ${currentHandData.cCards} (${currentHandData.c} ใบ)
+            แต้ม HCP: ${currentHandData.hcp} | ทรงไพ่ Shape: ${currentHandData.shape}
 
-            ช่วยเขียนคำอธิบายเฉลยสั้นๆ กระชับ น่ารักๆ ตามคาแรคเตอร์น้องบริดจ์ (มีค่ะ/จ้าาา/อิโมจิ) ให้ผู้เล่นเข้าใจว่าทำไมถึงต้องตอบอันนี้ค่ะ
+            สิ่งที่ผู้เล่นตอบ: ${userAns}
+            คำตอบที่ถูกต้องตามระบบ: ${correctAns}
+            สถานะการตอบ: ${isCorrect ? "ตอบถูก" : "ตอบผิด"}
+            กฎอ้างอิง: ${currentHandData.exp}
+
+            ช่วยเขียนคำอธิบายเฉลยสั้นๆ กระชับ น่ารักๆ ตามคาแรคเตอร์น้องบริดจ์ (มีค่ะ/จ้าาา/อิโมจิ) ให้ผู้เล่นเข้าใจว่าทำไมถึงต้องตอบ ${correctAns} และอ้างอิงกฎบทที่ 1-2 ค่ะ
             `;
             let aiExplanation = await askBridgeAI(promptText);
 
@@ -916,8 +923,14 @@
                 🤖 <strong>น้องบริดจ์กำลังสรุปผลการฝึกซ้อมให้ฟังอยู่นะคะ...</strong> ⏳
             `;
 
-            let promptMsg = `ผู้เล่นชื่อ ${currentAccount} เพิ่งทำแบบฝึกหัดบริดจ์ชุด 20 ข้อเสร็จ ได้ความแม่นยำ ${accuracy}% ใช้เวลาทั้งหมด ${mins} นาที ${secs} วินาที ช่วยเขียนสรุปและให้กำลังใจน่ารักๆ ตามคาแรคเตอร์น้องบริดจ์จ้าาา`;
-            
+            // ส่งข้อมูลสรุปสถิติทั้งหมดไปให้น้องบริดจ์วิเคราะห์
+            let promptMsg = `
+            ผู้เล่นชื่อ ${currentAccount} เพิ่งทำแบบฝึกหัดบริดจ์ชุด 20 ข้อเสร็จ:
+            - คะแนนความแม่นยำ: ${accuracy}% (${correctAnswersCount} จาก ${activeQuestionList.length} ข้อ)
+            - เวลาที่ใช้ทั้งหมด: ${mins} นาที ${secs} วินาที (เฉลี่ย ${secPerQ} วินาทีต่อข้อ)
+
+            ช่วยเขียนสรุปผลงาน วิเคราะห์สถิติ และให้กำลังใจน่ารักๆ พร้อมแนะนำเทคนิคตามคาแรคเตอร์น้องบริดจ์จ้าาา
+            `;
             let aiResult = await askBridgeAI(promptMsg);
 
             document.getElementById('aiSummaryContent').innerHTML = `
