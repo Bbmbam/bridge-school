@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bridge Bidding Practice Academy</title>
+    <script src="engine.js"></script>
     <style>
         :root {
             --primary: #1b4332;
@@ -31,18 +32,18 @@
         header {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
-            padding: 30px 20px;
+            padding: 25px 20px;
             text-align: center;
         }
-        header h1 { font-size: 1.8rem; margin: 0 0 5px 0; }
-        header p { font-style: italic; opacity: 0.9; margin: 0; }
+        header h1 { font-size: 1.6rem; margin: 0 0 5px 0; }
+        header p { font-style: italic; opacity: 0.9; margin: 0; font-size: 0.9rem; }
 
         .top-nav-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1000px;
-            margin: 20px auto 0 auto;
+            max-width: 900px;
+            margin: 15px auto 0 auto;
             padding: 0 20px;
         }
         .nav-btn {
@@ -53,13 +54,13 @@
             text-decoration: none;
             border-radius: 6px;
             font-weight: bold;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             transition: 0.3s;
         }
         .nav-btn:hover { background: var(--primary); }
 
         .container {
-            max-width: 1000px;
+            max-width: 900px;
             margin: 20px auto 40px auto;
             padding: 0 20px;
         }
@@ -84,16 +85,9 @@
             box-sizing: border-box;
             margin-bottom: 15px;
         }
-        .form-group {
-            margin-bottom: 15px;
-            text-align: left;
-        }
-        .form-group label {
-            font-weight: bold;
-            color: var(--primary);
-            display: block;
-            margin-bottom: 5px;
-        }
+        .form-group { margin-bottom: 15px; text-align: left; }
+        .form-group label { font-weight: bold; color: var(--primary); display: block; margin-bottom: 5px; }
+        
         .btn-primary {
             background: var(--primary);
             color: white;
@@ -108,9 +102,10 @@
         }
         .btn-primary:hover { background: var(--secondary); }
 
+        /* หมวดหมู่หลัก */
         .category-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 15px;
             margin-top: 20px;
         }
@@ -123,20 +118,69 @@
             cursor: pointer;
             transition: 0.3s;
         }
-        .cat-card:hover {
+        .cat-card:hover:not(.disabled) {
             border-color: var(--accent);
             background: #e8f5e9;
             transform: translateY(-3px);
         }
-        .cat-card h3 { color: var(--primary); margin: 0 0 10px 0; }
+        .cat-card.disabled {
+            background: #e9ecef;
+            opacity: 0.6;
+            cursor: not-allowed;
+            border-color: #dee2e6;
+        }
+        .cat-card h3 { color: var(--primary); margin: 0 0 5px 0; }
+        .badge-dev {
+            display: inline-block;
+            background: #6c757d;
+            color: white;
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-top: 8px;
+        }
 
+        /* เมนูย่อย Response แบบปุ่มยาวแนวตั้งตามรูป */
+        .response-menu-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .response-btn {
+            background: #ffffff;
+            border: 2px solid #ced4da;
+            color: var(--text-main);
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: center;
+        }
+        .response-btn:hover:not(.disabled) {
+            border-color: var(--secondary);
+            background: #e8f5e9;
+            color: var(--secondary);
+        }
+        .response-btn.disabled {
+            background: #f1f3f5;
+            color: #adb5bd;
+            border-color: #e9ecef;
+            cursor: not-allowed;
+        }
+
+        /* ตารางสถิติ */
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         th, td { padding: 10px; text-align: left; border-bottom: 1px solid #dee2e6; font-size: 0.95rem; }
         th { background: #f1f3f5; color: var(--primary); }
 
-        .stats-bar {
+        /* หน้า Quiz Board */
+        .quiz-header {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             background: #e9ecef;
             padding: 10px 15px;
             border-radius: 8px;
@@ -144,36 +188,74 @@
             font-weight: bold;
             color: var(--primary);
         }
-        .hand-box {
-            background: #f8f9fa;
-            border: 1px solid #ced4da;
-            border-radius: 8px;
+        
+        .table-felt {
+            background: #1b4332;
+            border-radius: 10px;
             padding: 20px;
+            color: white;
             margin-bottom: 20px;
-            font-size: 1.1rem;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.3);
         }
-        .options-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
-            margin-bottom: 20px;
+        .card-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 1.2rem;
+            background: rgba(255,255,255,0.08);
+            padding: 8px 12px;
+            border-radius: 6px;
         }
-        .option-btn {
-            padding: 12px 15px;
-            background: white;
-            border: 2px solid var(--secondary);
-            color: var(--secondary);
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: 0.2s;
+        .card-row:last-child { margin-bottom: 0; }
+        .suit-icon { width: 30px; font-size: 1.4rem; text-align: center; }
+        .card-list { flex: 1; letter-spacing: 2px; font-weight: bold; }
+        .card-count { width: 60px; text-align: right; font-size: 0.95rem; opacity: 0.8; }
+
+        .bidding-pad {
+            background: #1b4332;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
             text-align: center;
         }
-        .option-btn:hover:not(:disabled) { background: var(--secondary); color: white; }
-        .option-btn.correct { background: #2b9348 !important; border-color: #2b9348 !important; color: white !important; }
-        .option-btn.wrong { background: #d90429 !important; border-color: #d90429 !important; color: white !important; }
+        .pad-row {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .pad-btn {
+            background: #f8f9fa;
+            border: none;
+            padding: 10px 18px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #212529;
+            min-width: 60px;
+        }
+        .pad-btn:hover { background: #e9ecef; transform: scale(1.05); }
+        .pad-btn.selected { background: #ffb703; color: #000; }
+        .pad-btn.pass-btn { background: #adb5bd; color: white; }
+        .pad-btn.pass-btn.selected { background: #ffb703; color: #000; }
         
+        .submit-bidding-btn {
+            background: #52b788;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.2s;
+        }
+        .submit-bidding-btn:hover { background: #40916c; }
+
         .feedback-box {
             display: none;
             padding: 15px;
@@ -183,9 +265,10 @@
         }
         .feedback-box.correct { background: #d8f3dc; color: #1b4332; border: 1px solid #b7e4c7; }
         .feedback-box.wrong { background: #ffe5ec; color: #9b2226; border: 1px solid #ffb3c1; }
+        
         .next-btn {
             display: none;
-            margin-top: 20px;
+            margin-top: 15px;
             padding: 10px 25px;
             background: var(--primary);
             color: white;
@@ -201,7 +284,7 @@
 
     <header>
         <h1>Bridge Bidding Practice Academy</h1>
-        <p>ระบบฝึกซ้อมประมูลไพ่แยกหมวดหมู่ บัญชีส่วนตัว และตารางจัดอันดับ</p>
+        <p>ระบบฝึกซ้อมประมูลไพ่มาตรฐาน Engine V1 พร้อม AI สรุปผลการฝึกซ้อม</p>
     </header>
 
     <div class="top-nav-bar">
@@ -211,68 +294,52 @@
 
     <div class="container">
 
-        <!-- 1. หน้า Login / ลงทะเบียน (ชื่อเล่น + รหัสผ่าน) -->
+        <!-- 1. หน้า Login / ลงทะเบียน -->
         <div id="viewLogin" class="card view-section active">
             <h2>🔐 เข้าสู่ระบบ / ลงทะเบียนผู้ใช้งาน</h2>
-            <p>กรอกชื่อเล่นและรหัสผ่านส่วนตัว เพื่อป้องกันข้อมูลสถิติซ้ำซ้อน:</p>
-            
+            <p>กรอกชื่อเล่นและรหัสผ่านส่วนตัวเพื่อบันทึกประวัติและสถิติการฝึก 220 ข้อต่อชุด:</p>
             <div class="form-group">
                 <label>ชื่อเล่น:</label>
                 <input type="text" id="usernameInput" placeholder="เช่น กริช, โน้ต, บอย...">
             </div>
-            
             <div class="form-group">
-                <label>รหัสผ่านส่วนตัว (PIN หรือรหัสผ่าน):</label>
-                <input type="password" id="passwordInput" placeholder="รหัสผ่านสำหรับเข้าบัญชีของคุณ...">
+                <label>รหัสผ่านส่วนตัว (PIN):</label>
+                <input type="password" id="passwordInput" placeholder="รหัสผ่าน 4 ตัวหรือมากกว่า...">
             </div>
-
-            <button class="btn-primary" onclick="handleAuth()">เข้าสู่ระบบ / สมัครสมาชิก</button>
-            <p style="font-size: 0.85rem; color: #6c757d; margin-top: 10px; text-align: center;">
-                *หากยังไม่เคยสมัคร ระบบจะสร้างบัญชีใหม่ให้อัตโนมัติด้วยชื่อและรหัสนี้
-            </p>
+            <button class="btn-primary" onclick="handleAuth()">เข้าสู่ระบบ / เริ่มต้นฝึกซ้อม</button>
         </div>
 
-        <!-- 2. หน้าเมนูหลัก (Dashboard) -->
+        <!-- 2. หน้า Dashboard เลือกหมวดหมู่ -->
         <div id="viewDashboard" class="card view-section">
             <h2>สวัสดีคุณ <span id="displayName" style="color: var(--secondary);"></span>!</h2>
-            <div id="userStatsSummary" style="background: #e8f5e9; padding: 15px; border-radius: 8px; margin: 15px 0; color: var(--primary); font-weight: bold;">
-                <!-- สถิติส่วนตัว -->
-            </div>
+            <div id="userStatsSummary" style="background: #e8f5e9; padding: 15px; border-radius: 8px; margin: 15px 0; color: var(--primary); font-weight: bold;"></div>
 
-            <h3>เลือกหมวดหมู่ที่ต้องการฝึกซ้อม:</h3>
+            <h3>เลือกหมวดหมู่ฝึกซ้อม (ชุดละ 220 ข้อ):</h3>
             <div class="category-grid">
-                <div class="cat-card" onclick="startQuiz('opening')">
+                <div class="cat-card" onclick="startPractice('opening')">
                     <h3>Opening Bid</h3>
-                    <p>ฝึกการประมูลเปิดไพ่ตามระบบ</p>
+                    <p>ฝึกการประมูลเปิดไพ่คนแรก (Engine V1)</p>
                 </div>
-                <div class="cat-card" onclick="startQuiz('response')">
+                <div class="cat-card" onclick="openResponseMenu()">
                     <h3>Response Bid</h3>
-                    <p>ฝึกการตอบสนองเมื่อคู่ขาเปิด 1♣</p>
+                    <p>ฝึกการตอบสนองระดับต่างๆ</p>
                 </div>
-                <div class="cat-card" onclick="startQuiz('openerRebid')">
+                <div class="cat-card disabled">
                     <h3>Opener Rebid</h3>
                     <p>การประมูลรอบสองของคนเปิด</p>
+                    <span class="badge-dev">อยู่ระหว่างพัฒนา</span>
                 </div>
-                <div class="cat-card" onclick="startQuiz('responderRebid')">
+                <div class="cat-card disabled">
                     <h3>Responder Rebid</h3>
                     <p>การประมูลรอบสองของคนตอบ</p>
-                </div>
-                <div class="cat-card" onclick="startQuiz('full')" style="grid-column: span auto; background: #e2f0d9;">
-                    <h3>🌟 ฝึกแบบเต็มระบบ</h3>
-                    <p>รวมทุกสถานการณ์วัดใจ</p>
+                    <span class="badge-dev">อยู่ระหว่างพัฒนา</span>
                 </div>
             </div>
 
-            <h3 style="margin-top: 30px;">🏆 ตารางจัดอันดับผู้ฝึกซ้อมสูงสุด (Leaderboard)</h3>
+            <h3 style="margin-top: 30px;">🏆 ตารางจัดอันดับผู้ฝึกซ้อมสูงสุด</h3>
             <table>
                 <thead>
-                    <tr>
-                        <th>อันดับ</th>
-                        <th>ชื่อผู้ฝึกซ้อม</th>
-                        <th>รอบที่ฝึก</th>
-                        <th>คะแนนรวม</th>
-                        <th>ความแม่นยำเฉลี่ย</th>
-                    </tr>
+                    <tr><th>อันดับ</th><th>ผู้ฝึกซ้อม</th><th>รอบที่ทำจบ</th><th>คะแนนรวม</th><th>ความแม่นยำ</th></tr>
                 </thead>
                 <tbody id="leaderboardBody"></tbody>
             </table>
@@ -280,105 +347,127 @@
             <button class="btn-primary" style="background: #6c757d; margin-top: 20px;" onclick="logout()">ออกจากระบบ</button>
         </div>
 
-        <!-- 3. หน้าห้องทำแบบฝึกหัด (Quiz Room) -->
-        <div id="viewQuiz" class="card view-section">
-            <div class="stats-bar">
-                <span id="quizCategoryTitle">หมวดหมู่: -</span>
-                <span id="questionCount">ข้อที่: 1 / 5</span>
-                <span id="scoreCount">คะแนน: 0</span>
+        <!-- 2.1 หน้าเลือกหมวดหมู่ย่อย Response ตามรูป -->
+        <div id="viewResponseMenu" class="card view-section">
+            <h2>ฝึก Response</h2>
+            <p>เลือกรูปแบบการตอบสนองที่ต้องการฝึกซ้อม:</p>
+            
+            <div class="response-menu-list">
+                <button class="response-btn" onclick="startPractice('resp_1c')">Response 1C</button>
+                <button class="response-btn" onclick="startPractice('resp_1d')">Response 1D</button>
+                <button class="response-btn" onclick="startPractice('resp_1h')">Response 1H</button>
+                <button class="response-btn" onclick="startPractice('resp_1s')">Response 1S</button>
+                <button class="response-btn" onclick="startPractice('resp_1nt')">Response 1NT</button>
+                
+                <button class="response-btn disabled">Response 2C (ยังไม่พร้อมใช้งาน)</button>
+                <button class="response-btn disabled">Response 2D (ยังไม่พร้อมใช้งาน)</button>
+                <button class="response-btn disabled">Response 2H (ยังไม่พร้อมใช้งาน)</button>
+                <button class="response-btn disabled">Response 2S (ยังไม่พร้อมใช้งาน)</button>
+                <button class="response-btn disabled">Response 2NT (ยังไม่พร้อมใช้งาน)</button>
+                <button class="response-btn disabled">Response 3C (ยังไม่พร้อมใช้งาน)</button>
             </div>
 
-            <div class="hand-box" id="handDisplay"></div>
+            <button class="btn-primary" style="background: #6c757d; margin-top: 25px;" onclick="initDashboard()">&larr; กลับหน้าหลัก</button>
+        </div>
 
-            <p style="font-weight: bold; color: var(--primary);">ท่านควรจะประมูล (Bid) อย่างไร?</p>
+        <!-- 3. หน้าห้องฝึกซ้อมจำลองแผงประมูลจริง -->
+        <div id="viewQuiz" class="card view-section">
+            <div class="quiz-header">
+                <span id="quizCategoryTitle">หมวดหมู่: Opening Bid</span>
+                <span id="questionCount">ข้อที่: 1 / 220</span>
+                <span id="scoreCount">ถูก: 0/0</span>
+            </div>
 
-            <div class="options-grid" id="optionsContainer"></div>
+            <div class="table-felt">
+                <div style="margin-bottom: 10px; font-weight: bold; font-size: 1rem; opacity: 0.9;" id="scenarioText">คุณเป็นผู้เปิดประมูลคนแรก (Dealer) จะประมูลอะไร?</div>
+                <div class="card-row">
+                    <div class="suit-icon suit-s">♠</div>
+                    <div class="card-list" id="spadeCards">K Q 10 7 6</div>
+                    <div class="card-count" id="spadeCount">5 ใบ</div>
+                </div>
+                <div class="card-row">
+                    <div class="suit-icon suit-h">♥</div>
+                    <div class="card-list" id="heartCards">A K 2</div>
+                    <div class="card-count" id="heartCount">3 ใบ</div>
+                </div>
+                <div class="card-row">
+                    <div class="suit-icon suit-d">♦</div>
+                    <div class="card-list" id="diamondCards">6</div>
+                    <div class="card-count" id="diamondCount">1 ใบ</div>
+                </div>
+                <div class="card-row">
+                    <div class="suit-icon suit-c">♣</div>
+                    <div class="card-list" id="clubCards">A 10 9 5</div>
+                    <div class="card-count" id="clubCount">4 ใบ</div>
+                </div>
+                <div style="margin-top: 10px; font-size: 0.9rem; opacity: 0.8;" id="hcpShapeText">แต้ม: 16 HCP | ทรงไพ่: 5-3-1-4</div>
+            </div>
+
+            <div class="bidding-pad">
+                <div style="color: white; margin-bottom: 8px; font-weight: bold;">เลือกคำตอบการประมูลของคุณ:</div>
+                <div class="pad-row" id="levelRow">
+                    <button class="pad-btn pass-btn" onclick="selectLevel('Pass')">Pass</button>
+                    <button class="pad-btn" onclick="selectLevel('1')">1</button>
+                    <button class="pad-btn" onclick="selectLevel('2')">2</button>
+                    <button class="pad-btn" onclick="selectLevel('3')">3</button>
+                    <button class="pad-btn" onclick="selectLevel('4')">4</button>
+                    <button class="pad-btn" onclick="selectLevel('5')">5</button>
+                    <button class="pad-btn" onclick="selectLevel('6')">6</button>
+                    <button class="pad-btn" onclick="selectLevel('7')">7</button>
+                </div>
+                <div class="pad-row" id="suitRow" style="display: none;">
+                    <button class="pad-btn suit-c" onclick="selectSuit('C')">♣ คลับ</button>
+                    <button class="pad-btn suit-d" onclick="selectSuit('D')">♦ ไดมอนด์</button>
+                    <button class="pad-btn suit-h" onclick="selectSuit('H')">♥ ฮาร์ท</button>
+                    <button class="pad-btn suit-s" onclick="selectSuit('S')">♠ สเปด</button>
+                    <button class="pad-btn" onclick="selectSuit('N')" style="font-weight: bold;">NT</button>
+                </div>
+                <div style="margin-top: 12px;">
+                    <button class="submit-bidding-btn" id="submitBtn" onclick="submitAnswer()" disabled style="opacity: 0.5;">ยืนยันคำตอบ</button>
+                </div>
+            </div>
 
             <div class="feedback-box" id="feedbackBox"></div>
-            
             <button class="next-btn" id="nextBtn" onclick="nextQuestion()">ข้อถัดไป &rarr;</button>
-            <button class="next-btn" id="quitBtn" style="background: #6c757d; display: inline-block; margin-left: 10px;" onclick="returnToDashboard()">กลับหน้าหลัก</button>
+        </div>
+
+        <!-- 4. หน้าสรุปผล AI Coach -->
+        <div id="viewSummary" class="card view-section" style="text-align: center;">
+            <h2 style="color: var(--primary);">🤖 AI Coach สรุปผลการฝึกซ้อม</h2>
+            <p id="aiSummaryContent" style="text-align: left; background: #f8f9fa; padding: 20px; border-radius: 8px; line-height: 1.8;"></p>
+            <button class="btn-primary" style="max-width: 300px; margin-top: 20px;" onclick="initDashboard()">กลับสู่หน้าหลัก</button>
         </div>
 
     </div>
 
     <script>
-        const questionBank = {
-            opening: [
-                {
-                    hand: "♠ K Q 7 4 3<br>♥ A K 5<br>♦ 8 3<br>♣ 9 4",
-                    hcp: 14, shape: "5-3-2-3 (5M)", scenario: "ผู้เปิด (Dealer) ไม่มีใครเปิดมาก่อน",
-                    options: ["1♠", "1NT", "1♣", "Pass"], answer: "1♠",
-                    explanation: "มี 14 HCP และมีชุดโพดำ (♠) ยาว 5 ใบ เปิดสีหลักยาว 5 ใบก่อน (1♠)"
-                },
-                {
-                    hand: "♠ 8 2<br>♥ K Q J 7 4<br>♦ A K Q 5<br>♣ 6 3",
-                    hcp: 15, shape: "2-5-4-2", scenario: "ผู้เปิด (Dealer) ไม่มีใครเปิดมาก่อน",
-                    options: ["1♥", "1♦", "1NT", "2♦"], answer: "1♥",
-                    explanation: "มี 15 HCP มีชุดโพแดงยาว 5 ใบ เปิด 1♥ ตามมาตรฐาน"
-                }
-            ],
-            response: [
-                {
-                    hand: "♠ 6 3<br>♥ A 9 8 5 2<br>♦ K J 7<br>♣ Q 8 4",
-                    hcp: 10, shape: "2-5-3-3", scenario: "คู่ขาเปิดประมูล 1♣ คุณจะตอบว่าอะไร?",
-                    options: ["1♦ (Transfer ♥)", "1♥ (Transfer ♠)", "1NT", "Pass"], answer: "1♦ (Transfer ♥)",
-                    explanation: "ระบบ Low-Info Transfer Club: เปิด 1♣ มี 4+ ♥ ให้ใช้ 1♦ เป็น Transfer หาโพแดง"
-                }
-            ],
-            openerRebid: [
-                {
-                    hand: "♠ A K 5 3<br>♥ K Q 7 4<br>♦ 8 3<br>♣ 9 4",
-                    hcp: 14, shape: "4-4-3-2", scenario: "คุณเปิด 1♣ คู่ขาตอบ 1♦ (Transfer ♥) คุณจะประมูลรอบสองว่าอย่างไร?",
-                    options: ["1♥ (Accept Transfer)", "1NT", "2♣", "2♥"], answer: "1♥ (Accept Transfer)",
-                    explanation: "มี Support โพแดง 2+ ใบ ให้ Accept Transfer ด้วยการบิด 1♥"
-                }
-            ],
-            responderRebid: [
-                {
-                    hand: "♠ 6 3<br>♥ A K J 8 5 2<br>♦ K J 7<br>♣ 8 4",
-                    hcp: 11, shape: "2-6-3-2", scenario: "1♣ - 1♦ (Transfer ♥) <br> 1♥ - ? คุณจะประมูลต่ออย่างไร?",
-                    options: ["2♦ (Transfer Checkback / GI)", "Pass", "4♥", "3♥"], answer: "2♦ (Transfer Checkback / GI)",
-                    explanation: "ใช้ Transfer Checkback ระดับ 2 เพื่อเช็คความแรงและรูปแบบไพ่ต่อโดยไม่เสียพื้นที่"
-                }
-            ]
-        };
-
         let currentAccount = null;
-        let currentCategory = '';
-        let activeQuestions = [];
-        let qIndex = 0;
-        let currentScore = 0;
-        let correctCount = 0;
+        let currentMode = 'opening';
+        let questionCountTotal = 220;
+        let currentQIndex = 0;
+        let correctAnswersCount = 0;
+        let currentHandData = null;
+        
+        let selectedLevel = null;
+        let selectedSuit = null;
 
         function handleAuth() {
             const name = document.getElementById('usernameInput').value.trim();
             const pass = document.getElementById('passwordInput').value.trim();
-
-            if (!name || !pass) {
-                alert('กรุณากรอกทั้งชื่อเล่นและรหัสผ่านให้ครบถ้วนครับ');
-                return;
-            }
+            if (!name || !pass) { alert('กรุณากรอกชื่อและรหัสผ่าน'); return; }
 
             let accounts = JSON.parse(localStorage.getItem('bridge_accounts') || '{}');
-
             if (accounts[name]) {
-                // มีบัญชีนี้อยู่แล้ว เช็ครหัสผ่าน
                 if (accounts[name] === pass) {
                     currentAccount = name;
                     localStorage.setItem('bridge_logged_user', currentAccount);
                     initDashboard();
-                } else {
-                    alert('รหัสผ่านไม่ถูกต้อง! กรุณาลองใหม่อีกครั้ง');
-                }
+                } else { alert('รหัสผ่านไม่ถูกต้อง'); }
             } else {
-                // สมัครบัญชีใหม่
                 accounts[name] = pass;
                 localStorage.setItem('bridge_accounts', JSON.stringify(accounts));
-                
                 currentAccount = name;
                 localStorage.setItem('bridge_logged_user', currentAccount);
-                alert(`สร้างบัญชีใหม่ให้คุณ "${name}" เรียบร้อยแล้ว!`);
                 initDashboard();
             }
         }
@@ -386,182 +475,193 @@
         function logout() {
             localStorage.removeItem('bridge_logged_user');
             currentAccount = null;
-            document.getElementById('usernameInput').value = '';
-            document.getElementById('passwordInput').value = '';
             showView('viewLogin');
         }
 
-        function showView(viewId) {
+        function showView(id) {
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-            document.getElementById(viewId).classList.add('active');
+            document.getElementById(id).classList.add('active');
         }
 
         function initDashboard() {
             showView('viewDashboard');
             document.getElementById('displayName').innerText = currentAccount;
-
             let stats = getUserStats(currentAccount);
             document.getElementById('userStatsSummary').innerHTML = `
-                📊 สถิติส่วนตัวของคุณ: ฝึกไปแล้ว <strong>${stats.totalSessions} รอบ</strong> | 
-                ทำข้อสอบรวม <strong>${stats.totalQuestions} ข้อ</strong> | 
+                📊 สถิติของคุณ: ฝึกไปแล้ว <strong>${stats.totalSessions} ชุด</strong> | 
+                ทำข้อสอบรวม <strong>${stats.totalQuestionsDone} ข้อ</strong> | 
                 ความแม่นยำเฉลี่ย: <strong>${stats.avgAccuracy}%</strong>
             `;
-
             renderLeaderboard();
         }
 
-        function getUserStats(username) {
-            let allData = JSON.parse(localStorage.getItem('bridge_user_stats') || '{}');
-            return allData[username] || { totalSessions: 0, totalQuestions: 0, totalCorrect: 0, avgAccuracy: 0, totalScore: 0 };
+        function getUserStats(user) {
+            let data = JSON.parse(localStorage.getItem('bridge_user_stats') || '{}');
+            return data[user] || { totalSessions: 0, totalQuestionsDone: 0, totalCorrect: 0, avgAccuracy: 0, totalScore: 0 };
         }
 
-        function saveUserStats(username, sessionScore, sessionTotal, sessionCorrect) {
-            let allData = JSON.parse(localStorage.getItem('bridge_user_stats') || '{}');
-            if (!allData[username]) {
-                allData[username] = { totalSessions: 0, totalQuestions: 0, totalCorrect: 0, totalScore: 0, avgAccuracy: 0 };
-            }
-            let user = allData[username];
-            user.totalSessions += 1;
-            user.totalQuestions += sessionTotal;
-            user.totalCorrect += sessionCorrect;
-            user.totalScore += sessionScore;
-            user.avgAccuracy = Math.round((user.totalCorrect / user.totalQuestions) * 100);
-
-            localStorage.setItem('bridge_user_stats', JSON.stringify(allData));
+        function saveStats(user, correct, total) {
+            let data = JSON.parse(localStorage.getItem('bridge_user_stats') || '{}');
+            if (!data[user]) data[user] = { totalSessions: 0, totalQuestionsDone: 0, totalCorrect: 0, totalScore: 0, avgAccuracy: 0 };
+            let u = data[user];
+            u.totalSessions += 1;
+            u.totalQuestionsDone += total;
+            u.totalCorrect += correct;
+            u.totalScore += (correct * 10);
+            u.avgAccuracy = Math.round((u.totalCorrect / u.totalQuestionsDone) * 100);
+            localStorage.setItem('bridge_user_stats', JSON.stringify(data));
         }
 
         function renderLeaderboard() {
-            let allData = JSON.parse(localStorage.getItem('bridge_user_stats') || '{}');
-            let users = Object.keys(allData).map(name => ({
-                name: name,
-                sessions: allData[name].totalSessions,
-                score: allData[name].totalScore || 0,
-                accuracy: allData[name].avgAccuracy || 0
-            }));
-
-            users.sort((a, b) => b.score - a.score);
-
+            let data = JSON.parse(localStorage.getItem('bridge_user_stats') || '{}');
+            let users = Object.keys(data).map(k => ({ name: k, ...data[k] })).sort((a,b) => b.totalScore - a.totalScore);
             let tbody = document.getElementById('leaderboardBody');
-            tbody.innerHTML = '';
+            tbody.innerHTML = users.length === 0 ? `<tr><td colspan="5" style="text-align:center;">ยังไม่มีประวัติการฝึก</td></tr>` : 
+                users.map((u, i) => `<tr><td>${i+1}</td><td><strong>${u.name}</strong></td><td>${u.sessions || u.totalSessions} ชุด</td><td>${u.totalScore} คะแนน</td><td>${u.avgAccuracy}%</td></tr>`).join('');
+        }
 
-            if (users.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #6c757d;">ยังไม่มีข้อมูลผู้ฝึกซ้อม เป็นคนแรกที่เริ่มเลย!</td></tr>`;
+        function openResponseMenu() {
+            showView('viewResponseMenu');
+        }
+
+        function startPractice(mode) {
+            currentMode = mode;
+            currentQIndex = 0;
+            correctAnswersCount = 0;
+            
+            let titles = {
+                'opening': 'Opening Bid',
+                'resp_1c': 'Response to 1C',
+                'resp_1d': 'Response to 1D',
+                'resp_1h': 'Response to 1H',
+                'resp_1s': 'Response to 1S',
+                'resp_1nt': 'Response to 1NT'
+            };
+            document.getElementById('quizCategoryTitle').innerText = `หมวดหมู่: ${titles[mode] || mode}`;
+            
+            showView('viewQuiz');
+            loadNewQuestion();
+        }
+
+        function loadNewQuestion() {
+            currentQIndex++;
+            if (currentQIndex > questionCountTotal) {
+                finishPracticeSession();
                 return;
             }
 
-            users.forEach((u, index) => {
-                let tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : index + 1}</td>
-                    <td><strong>${u.name}</strong></td>
-                    <td>${u.sessions} รอบ</td>
-                    <td>${u.score} คะแนน</td>
-                    <td>${u.accuracy}%</td>
-                `;
-                tbody.appendChild(tr);
-            });
+            document.getElementById('questionCount').innerText = `ข้อที่: ${currentQIndex} / ${questionCountTotal}`;
+            document.getElementById('scoreCount').innerText = `ถูก: ${correctAnswersCount}/${currentQIndex - 1}`;
+
+            // เรียกใช้ฟังก์ชันสุ่มจาก engine.js
+            currentHandData = generateQuizQuestion(currentMode);
+
+            let scenarioStr = "คุณเป็นผู้เปิดประมูลคนแรก (Dealer) จะประมูลอะไร?";
+            if (currentMode === 'resp_1c') scenarioStr = "คู่ขาเปิด 1♣ คุณจะ Response ว่าอย่างไร?";
+            else if (currentMode === 'resp_1d') scenarioStr = "คู่ขาเปิด 1♦ คุณจะ Response ว่าอย่างไร?";
+            else if (currentMode === 'resp_1h') scenarioStr = "คู่ขาเปิด 1♥ คุณจะ Response ว่าอย่างไร?";
+            else if (currentMode === 'resp_1s') scenarioStr = "คู่ขาเปิด 1♠ คุณจะ Response ว่าอย่างไร?";
+            else if (currentMode === 'resp_1nt') scenarioStr = "คู่ขาเปิด 1NT คุณจะ Response ว่าอย่างไร?";
+            document.getElementById('scenarioText').innerText = scenarioStr;
+
+            document.getElementById('spadeCards').innerText = generateMockCards(currentHandData.s);
+            document.getElementById('spadeCount').innerText = currentHandData.s + " ใบ";
+            document.getElementById('heartCards').innerText = generateMockCards(currentHandData.h);
+            document.getElementById('heartCount').innerText = currentHandData.h + " ใบ";
+            document.getElementById('diamondCards').innerText = generateMockCards(currentHandData.d);
+            document.getElementById('diamondCount').innerText = currentHandData.d + " ใบ";
+            document.getElementById('clubCards').innerText = generateMockCards(currentHandData.c);
+            document.getElementById('clubCount').innerText = currentHandData.c + " ใบ";
+            document.getElementById('hcpShapeText').innerText = `แต้ม: ${currentHandData.hcp} HCP | ทรงไพ่: ${currentHandData.shape}`;
+
+            selectedLevel = null;
+            selectedSuit = null;
+            document.querySelectorAll('.pad-btn').forEach(b => b.classList.remove('selected'));
+            document.getElementById('suitRow').style.display = 'none';
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('submitBtn').style.opacity = '0.5';
+            document.getElementById('feedbackBox').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'none';
         }
 
-        function startQuiz(category) {
-            currentCategory = category;
-            if (category === 'full') {
-                activeQuestions = [...questionBank.opening, ...questionBank.response, ...questionBank.openerRebid, ...questionBank.responderRebid];
-                document.getElementById('quizCategoryTitle').innerText = "หมวดหมู่: ฝึกแบบเต็มระบบ";
+        function generateMockCards(count) {
+            const ranks = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
+            return ranks.slice(0, count).join(" ");
+        }
+
+        function selectLevel(lvl) {
+            selectedLevel = lvl;
+            document.querySelectorAll('#levelRow .pad-btn').forEach(b => b.classList.remove('selected'));
+            event.target.classList.add('selected');
+
+            if (lvl === 'Pass') {
+                selectedSuit = '';
+                document.getElementById('suitRow').style.display = 'none';
+                document.getElementById('submitBtn').disabled = false;
+                document.getElementById('submitBtn').style.opacity = '1';
             } else {
-                activeQuestions = [...(questionBank[category] || questionBank.opening)];
-                document.getElementById('quizCategoryTitle').innerText = `หมวดหมู่: ${category.toUpperCase()}`;
+                document.getElementById('suitRow').style.display = 'flex';
+                selectedSuit = null;
+                document.querySelectorAll('#suitRow .pad-btn').forEach(b => b.classList.remove('selected'));
+                document.getElementById('submitBtn').disabled = true;
+                document.getElementById('submitBtn').style.opacity = '0.5';
+            }
+        }
+
+        function selectSuit(suit) {
+            selectedSuit = suit;
+            document.querySelectorAll('#suitRow .pad-btn').forEach(b => b.classList.remove('selected'));
+            event.target.classList.add('selected');
+            document.getElementById('submitBtn').disabled = false;
+            document.getElementById('submitBtn').style.opacity = '1';
+        }
+
+        function submitAnswer() {
+            let userAns = selectedLevel === 'Pass' ? 'PASS' : (selectedLevel + selectedSuit);
+            let correctAns = currentHandData.ans.toUpperCase();
+
+            let fb = document.getElementById('feedbackBox');
+            fb.style.display = 'block';
+
+            if (userAns === correctAns) {
+                fb.className = 'feedback-box correct';
+                fb.innerHTML = `<strong>✔ ถูกต้องครับ!</strong> คำตอบคือ ${correctAns}<br>เหตุผล: ${currentHandData.exp}`;
+                correctAnswersCount++;
+            } else {
+                fb.className = 'feedback-box wrong';
+                fb.innerHTML = `<strong>✖ ยังไม่ถูกต้อง!</strong> คำตอบที่คุณเลือกคือ ${userAns} แต่คำตอบที่ถูกต้องตาม Engine V1 คือ <strong>${correctAns}</strong><br>เหตุผล: ${currentHandData.exp}`;
             }
 
-            activeQuestions.sort(() => Math.random() - 0.5);
-            activeQuestions = activeQuestions.slice(0, 5);
-
-            qIndex = 0;
-            currentScore = 0;
-            correctCount = 0;
-
-            showView('viewQuiz');
-            loadQuestion();
-        }
-
-        function loadQuestion() {
-            const q = activeQuestions[qIndex];
-            document.getElementById("questionCount").innerText = `ข้อที่: ${qIndex + 1} / ${activeQuestions.length}`;
-            document.getElementById("scoreCount").innerText = `คะแนน: ${currentScore}`;
-
-            document.getElementById("handDisplay").innerHTML = `
-                <strong>แต้ม (HCP):</strong> ${q.hcp} HCP | <strong>ทรงไพ่ (Shape):</strong> ${q.shape}<br>
-                <strong>สถานการณ์:</strong> ${q.scenario}<br><br>
-                <strong>มือไพ่ของคุณ:</strong><br>${q.hand}
-            `;
-
-            const optContainer = document.getElementById("optionsContainer");
-            optContainer.innerHTML = "";
-
-            let shuffledOpts = [...q.options].sort(() => Math.random() - 0.5);
-            shuffledOpts.forEach(opt => {
-                const btn = document.createElement("button");
-                btn.className = "option-btn";
-                btn.innerText = opt;
-                btn.onclick = () => checkAnswer(opt, q.answer, q.explanation);
-                optContainer.appendChild(btn);
-            });
-
-            document.getElementById("feedbackBox").style.display = "none";
-            document.getElementById("nextBtn").style.display = "none";
-        }
-
-        function checkAnswer(selected, correct, explanation) {
-            const buttons = document.querySelectorAll(".option-btn");
-            buttons.forEach(btn => {
-                btn.disabled = true;
-                if (btn.innerText === correct) btn.classList.add("correct");
-                if (btn.innerText === selected && selected !== correct) btn.classList.add("wrong");
-            });
-
-            const fb = document.getElementById("feedbackBox");
-            fb.style.display = "block";
-
-            if (selected === correct) {
-                fb.className = "feedback-box correct";
-                fb.innerHTML = `<strong>ถูกต้องครับ!</strong><br>${explanation}`;
-                currentScore += 10;
-                correctCount += 1;
-            } else {
-                fb.className = "feedback-box wrong";
-                fb.innerHTML = `<strong>ยังไม่ถูกต้องครับ!</strong> คำตอบที่ถูกคือ <strong>${correct}</strong><br>${explanation}`;
-            }
-
-            document.getElementById("scoreCount").innerText = `คะแนน: ${currentScore}`;
-            document.getElementById("nextBtn").style.display = "inline-block";
+            document.getElementById('scoreCount').innerText = `ถูก: ${correctAnswersCount}/${currentQIndex}`;
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('nextBtn').style.display = 'inline-block';
         }
 
         function nextQuestion() {
-            qIndex++;
-            if (qIndex < activeQuestions.length) {
-                loadQuestion();
-            } else {
-                saveUserStats(currentAccount, currentScore, activeQuestions.length, correctCount);
-                alert(`ยอดเยี่ยมมากครับ! คุณทำแบบฝึกหัดชุดนี้เสร็จแล้ว\nคะแนนรวม: ${currentScore} คะแนน (ตอบถูก ${correctCount}/${activeQuestions.length} ข้อ)`);
-                initDashboard();
-            }
+            loadNewQuestion();
         }
 
-        function returnToDashboard() {
-            if (confirm("คุณต้องการออกจากการฝึกซ้อมนี้หรือไม่? คะแนนจะไม่ถูกบันทึก")) {
-                initDashboard();
-            }
+        function finishPracticeSession() {
+            saveStats(currentAccount, correctAnswersCount, questionCountTotal);
+            showView('viewSummary');
+            let accuracy = Math.round((correctAnswersCount / questionCountTotal) * 100);
+            
+            document.getElementById('aiSummaryContent').innerHTML = `
+                ยินดีด้วยครับคุณ <strong>${currentAccount}</strong> คุณทำแบบฝึกหัดชุดนี้ครบชุด 220 ข้อเรียบร้อยแล้ว!<br><br>
+                📊 <strong>สรุปผลสถิติภาพรวม:</strong><br>
+                - คะแนนความแม่นยำ: <strong>${accuracy}%</strong> (${correctAnswersCount} จาก ${questionCountTotal} ข้อ)<br><br>
+                🤖 <strong>AI Coach วิเคราะห์การฝึกซ้อม:</strong><br>
+                ${accuracy >= 80 ? 'เยี่ยมยอดมาก! คุณมีความเข้าใจในระบบ Engine V1 เป็นอย่างดี ตัดสินใจตอบสนองได้อย่างแม่นยำ' : 
+                  accuracy >= 50 ? 'ทำได้ดีในระดับหนึ่ง แต่ยังมีบางจุดที่ต้องทบทวนกฎ Transfer และเงื่อนไข HCP เพิ่มเติม' : 
+                  'คุณยังต้องฝึกฝนเพิ่มเติมในส่วนของการคำนวณแต้มและข้อกำหนดการ Response ลองกลับไปทบทวนตารางคู่มือดูอีกรอบครับ'}
+            `;
         }
 
         window.onload = function() {
-            let loggedUser = localStorage.getItem('bridge_logged_user');
-            if (loggedUser) {
-                currentAccount = loggedUser;
-                initDashboard();
-            } else {
-                showView('viewLogin');
-            }
+            let user = localStorage.getItem('bridge_logged_user');
+            if (user) { currentAccount = user; initDashboard(); }
+            else { showView('viewLogin'); }
         };
     </script>
-
 </body>
 </html>
