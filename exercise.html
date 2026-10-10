@@ -282,17 +282,30 @@
         .feedback-box.correct { background: #d8f3dc; color: #1b4332; border: 1px solid #b7e4c7; }
         .feedback-box.wrong { background: #ffe5ec; color: #9b2226; border: 1px solid #ffb3c1; }
         
-        .next-btn {
+        /* จัดวางปุ่มข้อถัดไปให้อยู่ก่อน ตามคำขอ */
+        .action-area {
             display: none;
             margin-top: 15px;
-            padding: 10px 25px;
+            text-align: left;
+        }
+        .next-btn {
+            padding: 12px 30px;
             background: var(--primary);
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             font-weight: bold;
-            font-size: 1rem;
+            font-size: 1.1rem;
             cursor: pointer;
+            transition: 0.2s;
+        }
+        .next-btn:hover { background: var(--secondary); }
+        .countdown-text {
+            display: block;
+            margin-top: 8px;
+            font-size: 0.9rem;
+            color: #6c757d;
+            font-weight: normal;
         }
     </style>
 </head>
@@ -439,12 +452,12 @@
                     <button class="pad-btn" onclick="selectLevel('6')">6</button>
                     <button class="pad-btn" onclick="selectLevel('7')">7</button>
                 </div>
-                <!-- แปลงปุ่มชุดไพ่ให้แสดงเฉพาะไอคอนสีสวยงาม -->
+                <!-- ปุ่มดอกไพ่ใส่สีสันเฉพาะสัญลักษณ์ (♣ ♦ สีดำ/แดง, ♥ ♠ สีแดง/ดำตามมาตรฐาน) -->
                 <div class="pad-row" id="suitRow" style="display: none;">
-                    <button class="pad-btn suit-c" onclick="selectSuit('C')">♣</button>
-                    <button class="pad-btn suit-d" onclick="selectSuit('D')">♦</button>
-                    <button class="pad-btn suit-h" onclick="selectSuit('H')">♥</button>
-                    <button class="pad-btn suit-s" onclick="selectSuit('S')">♠</button>
+                    <button class="pad-btn suit-c" onclick="selectSuit('C')"><span class="suit-c">♣</span></button>
+                    <button class="pad-btn suit-d" onclick="selectSuit('D')"><span class="suit-d">♦</span></button>
+                    <button class="pad-btn suit-h" onclick="selectSuit('H')"><span class="suit-h">♥</span></button>
+                    <button class="pad-btn suit-s" onclick="selectSuit('S')"><span class="suit-s">♠</span></button>
                     <button class="pad-btn" onclick="selectSuit('N')" style="font-weight: bold;">NT</button>
                 </div>
                 <div style="margin-top: 12px;">
@@ -452,8 +465,13 @@
                 </div>
             </div>
 
+            <!-- พื้นที่แสดงผลลัพธ์: ปุ่มข้อถัดไปมาก่อน กล่องเฉลยอยู่ด้านล่าง -->
+            <div class="action-area" id="actionArea">
+                <button class="next-btn" id="nextBtn" onclick="nextQuestion()">ข้อถัดไป &rarr;</button>
+                <span class="countdown-text" id="countdownText">ระบบจะเปลี่ยนข้ออัตโนมัติใน 30 วินาที...</span>
+            </div>
+
             <div class="feedback-box" id="feedbackBox"></div>
-            <button class="next-btn" id="nextBtn" onclick="nextQuestion()">ข้อถัดไป &rarr;</button>
         </div>
 
         <!-- 4. หน้าสรุปผล AI Coach -->
@@ -481,6 +499,8 @@
 
         let selectedLevel = null;
         let selectedSuit = null;
+        let autoNextTimer = null;
+        let countdownInterval = null;
 
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playSound(type) {
@@ -618,7 +638,7 @@
             isReviewMode = false;
             activeQuestionList = [];
             for (let i = 0; i < 20; i++) {
-                let q = generateQuizQuestion(currentMode);
+                let q = generateCorrectHandAndQuiz(currentMode);
                 q.mode = currentMode;
                 activeQuestionList.push(q);
             }
@@ -654,7 +674,86 @@
             loadNewQuestion();
         }
 
+        // ==========================================
+        // ฟังก์ชันสุ่มไพ่และคำนวณ HCP ตามหลักสากลจริง
+        // ==========================================
+        function generateCorrectHandAndQuiz(mode) {
+            let sCount, hCount, dCount, cCount;
+            let sCards, hCards, dCards, cCards;
+            let hcp, shape;
+            let ansArr;
+
+            // วนลูปจนกว่าจะได้โจทย์ที่คำนวณแต้มและหน้าไพ่ตรงกันสมบูรณ์
+            while (true) {
+                // สุ่มจำนวนใบแต่ละชุดให้รวมกันได้ 13 ใบ
+                sCount = Math.floor(Math.random() * 10);
+                hCount = Math.floor(Math.random() * (13 - sCount + 1));
+                dCount = Math.floor(Math.random() * (13 - sCount - hCount + 1));
+                cCount = 13 - sCount - hCount - dCount;
+                shape = `${sCount}${hCount}${dCount}${cCount}`;
+
+                // แจกหน้าไพ่จริงและคำนวณ HCP จากหน้าไพ่ (A=4, K=3, Q=2, J=1)
+                let dealt = dealCardsForCounts(sCount, hCount, dCount, cCount);
+                hcp = dealt.totalHCP;
+
+                if (mode === 'opening') ansArr = opening_bid(hcp, shape);
+                else if (mode === 'resp_1c') ansArr = response_1c(hcp, shape);
+                else if (mode === 'resp_1d') ansArr = response_1d(hcp, shape);
+                else if (mode === 'resp_1h') ansArr = response_1major("1H", hcp, shape);
+                else if (mode === 'resp_1s') ansArr = response_1major("1S", hcp, shape);
+                else if (mode === 'resp_1nt') ansArr = response_1nt(hcp, shape);
+
+                // หากคำตอบไม่ใช่ PASS หรือตรงเงื่อนไขสมบูรณ์ ให้ใช้ชุดนี้
+                if (ansArr && ansArr[0]) {
+                    return {
+                        hcp: hcp,
+                        shape: shape,
+                        s: sCount, h: hCount, d: dCount, c: cCount,
+                        sCards: dealt.sStr, hCards: dealt.hStr, dCards: dealt.dStr, cCards: dealt.cStr,
+                        ans: ansArr[0],
+                        exp: ansArr[1]
+                    };
+                }
+            }
+        }
+
+        function dealCardsForCounts(sc, hc, dc, cc) {
+            const allRanks = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
+            // สับไพ่จำลอง
+            let deck = [];
+            allRanks.forEach(r => {
+                deck.push({ rank: r, val: r==='A'?4:r==='K'?3:r==='Q'?2:r==='J'?1:0 });
+            });
+            deck.sort(() => Math.random() - 0.5);
+
+            let sList = deck.splice(0, sc).sort((a,b) => cardRankWeight(b.rank) - cardRankWeight(a.rank));
+            let hList = deck.splice(0, hc).sort((a,b) => cardRankWeight(b.rank) - cardRankWeight(a.rank));
+            let dList = deck.splice(0, dc).sort((a,b) => cardRankWeight(b.rank) - cardRankWeight(a.rank));
+            let cList = deck.splice(0, cc).sort((a,b) => cardRankWeight(b.rank) - cardRankWeight(a.rank));
+
+            let totalHCP = 0;
+            [sList, hList, dList, cList].forEach(list => {
+                list.forEach(card => totalHCP += card.val);
+            });
+
+            return {
+                totalHCP: totalHCP,
+                sStr: sList.map(x=>x.rank).join(' '),
+                hStr: hList.map(x=>x.rank).join(' '),
+                dStr: dList.map(x=>x.rank).join(' '),
+                cStr: cList.map(x=>x.rank).join(' ')
+            };
+        }
+
+        function cardRankWeight(r) {
+            const weights = {"A":14, "K":13, "Q":12, "J":11, "10":10, "9":9, "8":8, "7":7, "6":6, "5":5, "4":4, "3":3, "2":2};
+            return weights[r] || 0;
+        }
+
         function loadNewQuestion() {
+            if (autoNextTimer) clearTimeout(autoNextTimer);
+            if (countdownInterval) clearInterval(countdownInterval);
+
             if (currentQIndex >= activeQuestionList.length) {
                 finishPracticeSession();
                 return;
@@ -675,13 +774,13 @@
             else if (m === 'resp_1nt') scenarioStr = "คู่ขาเปิด 1NT คุณจะ Response ว่าอย่างไร?";
             document.getElementById('scenarioText').innerText = scenarioStr;
 
-            document.getElementById('spadeCards').innerText = generateMockCards(currentHandData.s);
+            document.getElementById('spadeCards').innerText = currentHandData.sCards || generateMockCards(currentHandData.s);
             document.getElementById('spadeCount').innerText = currentHandData.s + " ใบ";
-            document.getElementById('heartCards').innerText = generateMockCards(currentHandData.h);
+            document.getElementById('heartCards').innerText = currentHandData.hCards || generateMockCards(currentHandData.h);
             document.getElementById('heartCount').innerText = currentHandData.h + " ใบ";
-            document.getElementById('diamondCards').innerText = generateMockCards(currentHandData.d);
+            document.getElementById('diamondCards').innerText = currentHandData.dCards || generateMockCards(currentHandData.d);
             document.getElementById('diamondCount').innerText = currentHandData.d + " ใบ";
-            document.getElementById('clubCards').innerText = generateMockCards(currentHandData.c);
+            document.getElementById('clubCards').innerText = currentHandData.cCards || generateMockCards(currentHandData.c);
             document.getElementById('clubCount').innerText = currentHandData.c + " ใบ";
             document.getElementById('hcpShapeText').innerText = `แต้ม: ${currentHandData.hcp} HCP | ทรงไพ่: ${currentHandData.shape}`;
 
@@ -692,7 +791,7 @@
             document.getElementById('submitBtn').disabled = true;
             document.getElementById('submitBtn').style.opacity = '0.5';
             document.getElementById('feedbackBox').style.display = 'none';
-            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('actionArea').style.display = 'none';
 
             let felt = document.getElementById('tableFeltBox');
             felt.className = "table-felt";
@@ -737,12 +836,15 @@
             let fb = document.getElementById('feedbackBox');
             fb.style.display = 'block';
             let felt = document.getElementById('tableFeltBox');
+            let actionArea = document.getElementById('actionArea');
+            actionArea.style.display = 'block';
 
+            // ประโยคเฉลยสั้นและกระชับ
             if (userAns === correctAns) {
                 playSound('correct');
                 felt.classList.add('anim-correct');
                 fb.className = 'feedback-box correct';
-                fb.innerHTML = `<strong>✔ ถูกต้องครับ!</strong> คำตอบคือ ${correctAns}<br>เหตุผล: ${currentHandData.exp}`;
+                fb.innerHTML = `✔ ถูกต้อง! ตอบ: <strong>${correctAns}</strong><br><span style="font-size:0.9rem; font-weight:normal;">เหตุผล: ${currentHandData.exp}</span>`;
                 correctAnswersCount++;
 
                 if (isReviewMode) {
@@ -752,7 +854,7 @@
                 playSound('wrong');
                 felt.classList.add('anim-wrong');
                 fb.className = 'feedback-box wrong';
-                fb.innerHTML = `<strong>✖ ยังไม่ถูกต้อง!</strong> คำตอบที่คุณเลือกคือ ${userAns} แต่คำตอบที่ถูกต้องตาม Engine V1 คือ <strong>${correctAns}</strong><br>เหตุผล: ${currentHandData.exp}`;
+                fb.innerHTML = `✖ ไม่ถูกต้อง (คุณตอบ: ${userAns} | ที่ถูก: <strong>${correctAns}</strong>)<br><span style="font-size:0.9rem; font-weight:normal;">เหตุผล: ${currentHandData.exp}</span>`;
 
                 if (!isReviewMode) {
                     addWrongQuestion(currentAccount, currentHandData);
@@ -761,15 +863,38 @@
 
             document.getElementById('scoreCount').innerText = `ถูก: ${correctAnswersCount}/${currentQIndex}`;
             document.getElementById('submitBtn').disabled = true;
-            document.getElementById('nextBtn').style.display = 'inline-block';
+
+            // ระบบตั้งเวลาถอยหลัง 30 วินาทีไปข้อถัดไปอัตโนมัติ
+            let timeLeft = 30;
+            let countdownEl = document.getElementById('countdownText');
+            countdownEl.innerText = `ระบบจะเปลี่ยนข้ออัตโนมัติใน ${timeLeft} วินาที...`;
+
+            if (countdownInterval) clearInterval(countdownInterval);
+            countdownInterval = setInterval(() => {
+                timeLeft--;
+                if (timeLeft > 0) {
+                    countdownEl.innerText = `ระบบจะเปลี่ยนข้ออัตโนมัติใน ${timeLeft} วินาที...`;
+                } else {
+                    clearInterval(countdownInterval);
+                }
+            }, 1000);
+
+            if (autoNextTimer) clearTimeout(autoNextTimer);
+            autoNextTimer = setTimeout(() => {
+                nextQuestion();
+            }, 30000);
         }
 
         function nextQuestion() {
+            if (autoNextTimer) clearTimeout(autoNextTimer);
+            if (countdownInterval) clearInterval(countdownInterval);
             loadNewQuestion();
         }
 
         function finishPracticeSession() {
             if (timerInterval) clearInterval(timerInterval);
+            if (autoNextTimer) clearTimeout(autoNextTimer);
+            if (countdownInterval) clearInterval(countdownInterval);
 
             if (!isReviewMode) {
                 saveStats(currentAccount, correctAnswersCount, activeQuestionList.length);
