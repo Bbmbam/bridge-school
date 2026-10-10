@@ -1,20 +1,64 @@
+
 name: Deploy Bridge School
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [main, master]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Inject API Key into ai-helper.js
+      - name: Verify Gemini API Key
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-          # แทนที่ข้อความ __GEMINI_API_KEY_PLACEHOLDER__ ในไฟล์ด้วยคีย์จริงจาก GitHub Secrets อย่างปลอดภัย
-          sed -i 's/__GEMINI_API_KEY_PLACEHOLDER__/${{ secrets.GEMINI_API_KEY }}/g' ai-helper.js
+          if [ -z "$GEMINI_API_KEY" ]; then
+            echo "::error::Missing GEMINI_API_KEY repository secret"
+            exit 1
+          fi
 
-      - name: Verify build
-        run: echo "API Key injected securely!"
+          if [ ! -f ai-helper.js ]; then
+            echo "::error::ai-helper.js not found"
+            exit 1
+          fi
+
+          if ! grep -q '__GEMINI_API_KEY_PLACEHOLDER__' ai-helper.js; then
+            echo "::error::API key placeholder not found in ai-helper.js"
+            exit 1
+          fi
+
+          echo "Secret exists and placeholder was found."
+
+      - name: Inject API Key
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+
+          path = Path("ai-helper.js")
+          source = path.read_text()
+          placeholder = "__GEMINI_API_KEY_PLACEHOLDER__"
+          key = os.environ["GEMINI_API_KEY"]
+
+          if not key:
+              raise SystemExit("Missing API key")
+
+          path.write_text(source.replace(placeholder, key))
+          print("API key injection completed.")
+          PY
+
+      - name: Verify placeholder removed
+        run: |
+          if grep -q '__GEMINI_API_KEY_PLACEHOLDER__' ai-helper.js; then
+            echo "::error::Placeholder remains in ai-helper.js"
+            exit 1
+          fi
+
+          echo "Placeholder replacement verified."
