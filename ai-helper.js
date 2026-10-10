@@ -68,11 +68,27 @@ async function askBridgeAI(promptText) {
         });
 
         let data = await response.json();
-        if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts) {
-            return data.candidates[0].content.parts[0].text;
+let data = await response.json();
+
+        if (!response.ok) {
+            console.error("Gemini API Error:", response.status, data);
+            alert(
+                "Gemini API Error " + response.status + ":\n" +
+                (data.error?.message || JSON.stringify(data))
+            );
+            return "AI ยังสร้างคำอธิบายไม่ได้ กรุณาตรวจสอบ API Error";
+        }
+
+        if (
+            data.candidates &&
+            data.candidates[0]?.content?.parts
+        ) {
+            return data.candidates[0].content.parts
+                .map(part => part.text || "")
+                .join("\n");
         } else {
             console.error("API Response Error:", data);
-            return "อุ๊ย! น้องบริดจ์ขออภัยด้วยนะคะ ขออีกรอบน้าาา 😅";
+            return "AI ไม่ได้ส่งคำอธิบายกลับมา กรุณาตรวจสอบ Console ค่ะ";
         }
     } catch (error) {
         console.error("AI Fetch Error:", error);
