@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bridge Bidding Classroom - ห้องเรียนประมูลไพ่บริดจ์</title>
+    <style>
+        :root {
+            --primary: #1b4332;
+            --secondary: #2d6a4f;
+            --accent: #52b788;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-main: #212529;
+            --text-muted: #6c757d;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        header h2 {
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+        header h1 {
+            font-size: 2.2rem;
+            margin: 0 0 10px 0;
+        }
+        header p {
+            font-size: 1.05rem;
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+        .container {
+            max-width: 1000px;
+            margin: -30px auto 40px auto;
+            padding: 0 20px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-top: 4px solid var(--accent);
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        .card-icon {
+            width: 45px;
+            height: 45px;
+            background: #e8f5e9;
+            color: var(--secondary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        .badge {
+            background: #f1f3f5;
+            color: var(--text-muted);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .card h3 {
+            margin: 0 0 10px 0;
+            color: var(--primary);
+            font-size: 1.25rem;
+        }
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin: 0 0 20px 0;
+            flex-grow: 1;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: transparent;
+            color: var(--secondary);
+            border: 2px solid var(--secondary);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            background: var(--secondary);
+            color: white;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h2>Bridge Bidding Classroom</h2>
+        <h1>ห้องเรียนประมูลไพ่บริดจ์</h1>
+        <p>เริ่มต้นจากการนับแต้มในมือ ไปจนถึงการประมูลกับคู่ขาอย่างเป็นระบบ พร้อมแบบฝึกหัดแจกไพ่จริงทุกบทเรียน</p>
+    </header>
+
+    <div class="container">
+        <div class="grid">
+            <!-- การ์ดที่ 1 -->
+            <div class="card">
+                <div>
+                    <div class="card-header">
+                        <div class="card-icon">📊</div>
+                        <span class="badge">บทที่ 1</span>
+                    </div>
+                    <h3>การนับแต้ม HCP</h3>
+                    <p>เรียนรู้ค่าของไพ่ A K Q J การประเมินมือ และฝึกนับแต้มจากมือที่สุ่มแจก</p>
+                </div>
+                <a href="#lesson1" class="btn">เริ่มเรียน &rarr;</a>
+            </div>
+
+            <!-- การ์ดที่ 2 -->
+            <div class="card">
+                <div>
+                    <div class="card-header">
+                        <div class="card-icon">📚</div>
+                        <span class="badge">บทที่ 2</span>
+                    </div>
+                    <h3>ระบบการประมูล</h3>
+                    <p>เลือกฝึก Natural Bidding System หรือกรอกระบบของคุณเอง แล้วเรียน Opening, Response และ Rebid</p>
+                </div>
+                <a href="#lesson2" class="btn">เริ่มเรียน &rarr;</a>
+            </div>
+
+            <!-- การ์ดที่ 3 -->
+            <div class="card">
+                <div>
+                    <div class="card-header">
+                        <div class="card-icon">⚡</div>
+                        <span class="badge">ระบบเสริม</span>
+                    </div>
+                    <h3>วิเคราะห์ไพ่ในมือ 13 ใบ</h3>
+                    <p>กรอกไพ่ในมือของคุณเพื่อระบบช่วยประเมินการเปิดประมูล (Opening Bid) อัตโนมัติ</p>
+                </div>
+                <a href="#analyzer" class="btn">ใช้งานระบบ &rarr;</a>
+            </div>
+
+            <!-- การ์ดที่ 4 -->
+            <div class="card">
+                <div>
+                    <div class="card-header">
+                        <div class="card-icon">🧩</div>
+                        <span class="badge">ขั้นสูง</span>
+                    </div>
+                    <h3>วิเคราะห์ 4 มือ & Convention</h3>
+                    <p>จำลองการเล่นและการประมูลครบทั้ง 4 ทิศทาง พร้อมรองรับ Convention เฉพาะตัวของคุณ</p>
+                </div>
+                <a href="#fullgame" class="btn">ใช้งานระบบ &rarr;</a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Bridge Bidding Classroom. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
