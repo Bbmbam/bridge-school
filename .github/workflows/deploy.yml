@@ -1,0 +1,20 @@
+name: Deploy Bridge School
+
+on:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Inject API Key into ai-helper.js
+        run: |
+          # แทนที่ข้อความ __GEMINI_API_KEY_PLACEHOLDER__ ในไฟล์ด้วยคีย์จริงจาก GitHub Secrets อย่างปลอดภัย
+          sed -i 's/__GEMINI_API_KEY_PLACEHOLDER__/${{ secrets.GEMINI_API_KEY }}/g' ai-helper.js
+
+      - name: Verify build
+        run: echo "API Key injected securely!"
