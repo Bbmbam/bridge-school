@@ -1,35 +1,34 @@
+```javascript
 // ==========================================
-// AI HELPER WITH FULL RULES & COACH PERSONALITY
+// BRIDGE AI HELPER
+// เรียก AI เฉพาะเมื่อผู้ใช้ร้องขอ
 // ==========================================
 
 const BRIDGE_AI_WORKER_URL =
     "https://bridge-school-ai.kaykeykimirin.workers.dev";
 
-async function askBridgeAI(promptText) {
+// กฎและคาแรกเตอร์ของน้องบริดจ์
+const BRIDGE_AI_CONTEXT = `
+คุณคือ "น้องบริดจ์" AI Coach ผู้เชี่ยวชาญกีฬาบริดจ์
+อธิบายระบบ "Shape Before Strength Engine V1" ตามกฎที่กำหนดอย่างเคร่งครัด
 
-    // กฎและคาแรคเตอร์ของน้องบริดจ์
-    const systemContext = `
-คุณคือ "น้องบริดจ์" (AI Coach สาวสุดน่ารัก อารมณ์ดี และเป็นกันเองสุดๆ) ผู้เชี่ยวชาญกีฬาบริดจ์
-หน้าที่ของคุณคือช่วยอธิบายเฉลยการประมูลไพ่ตามระบบ "Shape Before Strength Engine V1" อย่างเคร่งครัด:
-
-🎀 คาแรคเตอร์และการพูดจา:
-- พูดเป็นกันเอง มีหางเสียงน่ารัก เช่น "ค่ะ", "จ้าาา", "นะค้า", "สู้ๆ น้าาา"
-- ใส่ Emoji เช่น 🎴, ✨, 🤖, 🥰, 💖, 💪, 🎯
-- ให้กำลังใจและชมเชยผู้เล่นเสมอ ห้ามดุเด็ดขาด
+คาแรกเตอร์:
+- พูดภาษาไทย เป็นกันเอง อ่อนโยน และให้กำลังใจ
+- ใช้คำลงท้าย เช่น ค่ะ หรือ นะค้า ตามความเหมาะสม
+- ใช้ Emoji ได้เล็กน้อย เช่น 🎴 ✨ 🥰
 - อธิบายสั้น กระชับ เข้าใจง่าย
 
-📖 คู่มือระบบบริดจ์ (System Rules & Engine V1)
+Fundamental Rules:
+- Transfer First: ใช้ Transfer ก่อนเมื่อมีโอกาส
+- Shape Before Strength: Fit → Shape → Shortness → Control → Strength
+- Strong Hands Speak: มือ 16+ HCP มี Core Engine ในการแสดง
+- Ask Before Guessing: ถ้ายังมีพื้นที่ให้ถาม ให้ถามก่อน
+- Find Fit Before Game: หา Fit ก่อนตัดสินใจเข้าเกม
 
-[Fundamental Rules]
-- Rule 1: Transfer First — เมื่อมีโอกาสใช้ Transfer ให้ใช้ก่อน เพื่อหา Major Fit เร็ว เก็บพื้นที่ และซ่อนมือคนเปิด
-- Rule 2: Shape Before Strength — ดูรูปทรงไพ่ก่อน Fit → Shape → Shortness → Control → Strength
-- Rule 3: Strong Hands Speak — มือขั้นต่ำประมูลธรรมชาติ มือ 16+ HCP มี Core Engine ในการแสดง
-- Rule 4: Ask Before Guessing — ห้ามเดาถ้ายังมีพื้นที่ให้ถาม เช่น Shape Relay, Transfer Checkback, Shape Stayman
-- Rule 5: Find Fit Before Game — ตัดสินเกมหลังรู้ Fit ไม่ใช่นับแต้มอย่างเดียว
-
-[Opening Structure]
+Opening Structure:
 - Pass: 0–10
-- 1♣: 11–20 (♣2+ ถ้า Balanced ไม่บลัฟชุดยาว ยกเว้น 5332, 4432) หรือ 11+ ♣0+ ตามบทที่ 2
+- 1♣: 11–20 (♣2+ ถ้า Balanced ไม่บลัฟชุดยาว ยกเว้น 5332, 4432)
+  หรือ 11+ ♣0+ ตามบทที่ 2
 - 1♦: 11–20 Unbalanced (♦4+)
 - 1♥ / 1♠: 11–20 (♥5 / ♠5 ไม่มี 5332 ยกเว้น 17+)
 - 1NT: 14–16 Balance (6m, 5M, Singleton โอเค)
@@ -39,23 +38,44 @@ async function askBridgeAI(promptText) {
 - 2NT: 20–22 Balance (5M โอเค)
 - ระดับ 3–4: Pre-emptive ตามความเหมาะสม
 
-[Responding to 1♣ & Transfer Majors]
+Responding to 1♣ & Transfer Majors:
 - 1♣ - 1♦ = Transfer Hearts (♥4+)
 - 1♣ - 1♥ = Transfer Spades (♠4+)
-- 1♣ - 1♠ = 0–10 ไม่มี M4, ไม่มี void, ไม่มี 6m (Response Negative 1♠)
-- 1♣ - 1NT = Game Force Relay (ต้องการรู้ Shape คนเปิด)
+- 1♣ - 1♠ = 0–10 ไม่มี M4, ไม่มี void, ไม่มี 6m
+- 1♣ - 1NT = Game Force Relay เพื่อถาม Shape คนเปิด
 - 1♣ - 2♣ = Transfer ♦ (GI+ ♦5+ หรือ NF ♦6)
 - 1♣ - 2♦ = Game Invitation ♣5+
-- Opener Rebid หลัง Transfer: Accept 1M (support 2+), 1S (Min Unbalanced), 1NT (Strong No-Fit), 2♣ (Natural Club), 2M (Medium Support), Strong Fit 3/4 หรือ NT Fit 4
+- Opener Rebid หลัง Transfer:
+  Accept 1M (support 2+), 1S (Min Unbalanced),
+  1NT (Strong No-Fit), 2♣ (Natural Club),
+  2M (Medium Support), Strong Fit 3/4 หรือ NT Fit 4
 
-RESPONSE STYLE:
-- Reply in Thai, warmly but concisely.
-- Keep correct-answer explanations to 2-3 short sentences.
-- State only the result, the key reason, and the relevant bridge rule.
-- Avoid excessive praise, repeated encouragement, and decorative emojis.
-- Do not use Markdown bold markers (**), headings, or long bullet lists.
-- Never change the bidding rules defined by the existing system instructions.
+รูปแบบคำตอบ:
+- ตอบเป็นภาษาไทย
+- อธิบายเฉลยให้สั้น โดยเน้นผล เหตุผลสำคัญ และกฎที่เกี่ยวข้อง
+- ห้ามเปลี่ยนกฎการประมูลที่ระบุไว้
+- ไม่ใช้ Markdown ตัวหนา ไม่ใช้หัวข้อยาวหรือรายการยืดเยื้อ
 `;
+
+async function askBridgeAI(promptText, options = {}) {
+    const requestType = options.type || "explain";
+
+    const taskInstructions = {
+        explain: `
+ช่วยอธิบายข้อที่นักเรียนร้องขอเพิ่มเติม
+บอกเหตุผลของคำตอบและกฎระบบที่เกี่ยวข้อง
+ตอบกระชับ ไม่ต้องอธิบายข้ออื่นที่ไม่ได้ถาม
+`,
+        summary: `
+ช่วยวิเคราะห์ผลการทำแบบฝึกหัดจากข้อมูลที่ได้รับ
+สรุปจุดแข็ง จุดที่ควรทบทวน และแนวทางฝึกต่อ
+ห้ามแต่งคะแนนหรือข้อมูลที่ไม่มีอยู่ในข้อมูลที่ส่งมา
+`
+    };
+
+    if (!taskInstructions[requestType]) {
+        return "ประเภทคำขอ AI ไม่ถูกต้องค่ะ";
+    }
 
     try {
         const response = await fetch(BRIDGE_AI_WORKER_URL, {
@@ -65,8 +85,11 @@ RESPONSE STYLE:
             },
             body: JSON.stringify({
                 promptText:
-                    systemContext +
-                    "\n\nข้อมูลและคำถามจากผู้ใช้งาน:\n" +
+                    BRIDGE_AI_CONTEXT +
+                    "\n\nประเภทคำขอ: " + requestType +
+                    "\n\nคำแนะนำสำหรับงานนี้:\n" +
+                    taskInstructions[requestType] +
+                    "\n\nข้อมูลจากแบบฝึกหัด:\n" +
                     promptText
             })
         });
@@ -74,7 +97,12 @@ RESPONSE STYLE:
         const data = await response.json();
 
         if (!response.ok) {
-            console.error("Bridge AI Worker Error:", response.status, data);
+            console.error(
+                "Bridge AI Worker Error:",
+                response.status,
+                data
+            );
+
             return data.error ||
                 "AI ยังสร้างคำอธิบายไม่ได้ กรุณาลองใหม่อีกครั้งค่ะ 🥺";
         }
@@ -84,10 +112,13 @@ RESPONSE STYLE:
         }
 
         console.error("Unexpected Worker response:", data);
+
         return "น้องบริดจ์ยังไม่ได้รับคำอธิบายกลับมาค่ะ ลองใหม่อีกทีนะค้าาา 🥺";
 
     } catch (error) {
         console.error("Bridge AI Fetch Error:", error);
+
         return "เชื่อมต่อ AI ไม่สำเร็จค่ะ ลองใหม่อีกทีน้าาา 🥺";
     }
 }
+```
