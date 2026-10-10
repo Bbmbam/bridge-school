@@ -47,6 +47,14 @@ async function askBridgeAI(promptText) {
 - 1♣ - 2♣ = Transfer ♦ (GI+ ♦5+ หรือ NF ♦6)
 - 1♣ - 2♦ = Game Invitation ♣5+
 - Opener Rebid หลัง Transfer: Accept 1M (support 2+), 1S (Min Unbalanced), 1NT (Strong No-Fit), 2♣ (Natural Club), 2M (Medium Support), Strong Fit 3/4 หรือ NT Fit 4
+
+RESPONSE STYLE:
+- Reply in Thai, warmly but concisely.
+- Keep correct-answer explanations to 2-3 short sentences.
+- State only the result, the key reason, and the relevant bridge rule.
+- Avoid excessive praise, repeated encouragement, and decorative emojis.
+- Do not use Markdown bold markers (**), headings, or long bullet lists.
+- Never change the bidding rules defined by the existing system instructions.
 `;
 
     try {
