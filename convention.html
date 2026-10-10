@@ -46,29 +46,35 @@
             gap: 10px;
             margin-bottom: 25px;
             flex-wrap: wrap;
+            cursor: pointer;
         }
-        .nav-tabs a {
+        .nav-tab-btn {
             flex: 1;
             text-align: center;
             padding: 12px;
             background: #e9ecef;
             color: var(--primary);
-            text-decoration: none;
+            border: none;
             border-radius: 8px;
             font-weight: bold;
+            font-size: 1rem;
             transition: 0.3s;
         }
-        .nav-tabs a:hover, .nav-tabs a.active {
+        .nav-tab-btn:hover, .nav-tab-btn.active {
             background: var(--secondary);
             color: white;
         }
         .section-box {
+            display: none; /* ซ่อนไว้ก่อนทั้งหมด */
             background: var(--card-bg);
             border-radius: 12px;
             padding: 30px;
             margin-bottom: 30px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             border-left: 5px solid var(--accent);
+        }
+        .section-box.active {
+            display: block; /* แสดงเฉพาะตัวที่เลือก */
         }
         h2 {
             color: var(--primary);
@@ -94,15 +100,6 @@
         th {
             background-color: #f1f3f5;
             color: var(--primary);
-        }
-        pre {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 6px;
-            overflow-x: auto;
-            font-family: inherit;
-            white-space: pre-wrap;
-            border: 1px solid #e9ecef;
         }
         ul, ol {
             padding-left: 20px;
@@ -136,15 +133,15 @@
     <div class="container">
         <a href="index.html" class="back-btn">&larr; กลับหน้าหลัก</a>
 
-        <!-- แถบเมนูลัดเชื่อมโยงโซนหลัก -->
+        <!-- ปุ่มกดเปลี่ยนหน้าจอเนื้อหา -->
         <div class="nav-tabs">
-            <a href="#fundamental" class="active">บทที่ 1: Fundamental Rules</a>
-            <a href="#opening">บทที่ 1 & 2: Opening Structure</a>
-            <a href="#responses">Responses & Core Engine</a>
+            <button class="nav-tab-btn active" onclick="switchTab(event, 'fundamental')">บทที่ 1: Fundamental Rules</button>
+            <button class="nav-tab-btn" onclick="switchTab(event, 'opening')">บทที่ 1 & 2: Opening Structure</button>
+            <button class="nav-tab-btn" onclick="switchTab(event, 'responses')">Responses & Core Engine</button>
         </div>
 
         <!-- บทที่ 1: Fundamental Rules -->
-        <div id="fundamental" class="section-box">
+        <div id="fundamental" class="section-box active">
             <h2>บทที่ 1: Fundamental Rules of the System</h2>
             
             <h3>Rule 1: Transfer First</h3>
@@ -296,6 +293,24 @@
             </ol>
         </div>
     </div>
+
+    <script>
+        function switchTab(evt, tabId) {
+            // ซ่อนเนื้อหาทั้งหมด
+            let boxes = document.getElementsByClassName("section-box");
+            for (let box of boxes) {
+                box.classList.remove("active");
+            }
+            // เอาสถานะ active ออกจากทุกปุ่ม
+            let buttons = document.getElementsByClassName("nav-tab-btn");
+            for (let btn of buttons) {
+                btn.classList.remove("active");
+            }
+            // แสดงเฉพาะเนื้อหาที่เลือก และไฮไลท์ปุ่ม
+            document.getElementById(tabId).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+    </script>
 
 </body>
 </html>
