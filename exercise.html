@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bridge Bidding Practice Academy - Engine V1</title>
     <script src="engine.js"></script>
+    <script src="ai-helper.js"></script>
     <style>
         :root {
             --primary: #1b4332;
@@ -282,7 +283,6 @@
         .feedback-box.correct { background: #d8f3dc; color: #1b4332; border: 1px solid #b7e4c7; }
         .feedback-box.wrong { background: #ffe5ec; color: #9b2226; border: 1px solid #ffb3c1; }
         
-        /* จัดวางปุ่มข้อถัดไปให้อยู่ก่อน ตามคำขอ */
         .action-area {
             display: none;
             margin-top: 15px;
@@ -313,7 +313,7 @@
 
     <header>
         <h1>Bridge Bidding Practice Academy</h1>
-        <p>ระบบฝึกซ้อมประมูลไพ่มาตรฐาน Engine V1 พร้อมระบบจับเวลาและทวนข้อผิดพลาด</p>
+        <p>ระบบฝึกซ้อมประมูลไพ่มาตรฐาน Engine V1 พร้อม AI Coach น้องบริดจ์</p>
     </header>
 
     <div class="top-nav-bar">
@@ -452,7 +452,6 @@
                     <button class="pad-btn" onclick="selectLevel('6')">6</button>
                     <button class="pad-btn" onclick="selectLevel('7')">7</button>
                 </div>
-                <!-- ปุ่มดอกไพ่ใส่สีสันเฉพาะสัญลักษณ์ (♣ ♦ สีดำ/แดง, ♥ ♠ สีแดง/ดำตามมาตรฐาน) -->
                 <div class="pad-row" id="suitRow" style="display: none;">
                     <button class="pad-btn suit-c" onclick="selectSuit('C')"><span class="suit-c">♣</span></button>
                     <button class="pad-btn suit-d" onclick="selectSuit('D')"><span class="suit-d">♦</span></button>
@@ -465,7 +464,6 @@
                 </div>
             </div>
 
-            <!-- พื้นที่แสดงผลลัพธ์: ปุ่มข้อถัดไปมาก่อน กล่องเฉลยอยู่ด้านล่าง -->
             <div class="action-area" id="actionArea">
                 <button class="next-btn" id="nextBtn" onclick="nextQuestion()">ข้อถัดไป &rarr;</button>
                 <span class="countdown-text" id="countdownText">ระบบจะเปลี่ยนข้ออัตโนมัติใน 30 วินาที...</span>
@@ -476,8 +474,10 @@
 
         <!-- 4. หน้าสรุปผล AI Coach -->
         <div id="viewSummary" class="card view-section" style="text-align: center;">
-            <h2 style="color: var(--primary);">🤖 AI Coach สรุปผลการฝึกซ้อม</h2>
-            <p id="aiSummaryContent" style="text-align: left; background: #f8f9fa; padding: 20px; border-radius: 8px; line-height: 1.8;"></p>
+            <h2 style="color: var(--primary);">🤖 AI Coach น้องบริดจ์สรุปผลการฝึกซ้อม</h2>
+            <p id="aiSummaryContent" style="text-align: left; background: #f8f9fa; padding: 20px; border-radius: 8px; line-height: 1.8;">
+                🤖 น้องบริดจ์กำลังประมวลผลสถิติและวิเคราะห์ภาพรวมให้คุณอยู่นะคะ รอสักครู่น้าาา... ⏳
+            </p>
             <button class="btn-primary" style="max-width: 300px; margin-top: 20px;" onclick="initDashboard()">กลับสู่หน้าหลัก</button>
         </div>
 
@@ -674,25 +674,19 @@
             loadNewQuestion();
         }
 
-        // ==========================================
-        // ฟังก์ชันสุ่มไพ่และคำนวณ HCP ตามหลักสากลจริง
-        // ==========================================
         function generateCorrectHandAndQuiz(mode) {
             let sCount, hCount, dCount, cCount;
             let sCards, hCards, dCards, cCards;
             let hcp, shape;
             let ansArr;
 
-            // วนลูปจนกว่าจะได้โจทย์ที่คำนวณแต้มและหน้าไพ่ตรงกันสมบูรณ์
             while (true) {
-                // สุ่มจำนวนใบแต่ละชุดให้รวมกันได้ 13 ใบ
                 sCount = Math.floor(Math.random() * 10);
                 hCount = Math.floor(Math.random() * (13 - sCount + 1));
                 dCount = Math.floor(Math.random() * (13 - sCount - hCount + 1));
                 cCount = 13 - sCount - hCount - dCount;
                 shape = `${sCount}${hCount}${dCount}${cCount}`;
 
-                // แจกหน้าไพ่จริงและคำนวณ HCP จากหน้าไพ่ (A=4, K=3, Q=2, J=1)
                 let dealt = dealCardsForCounts(sCount, hCount, dCount, cCount);
                 hcp = dealt.totalHCP;
 
@@ -703,7 +697,6 @@
                 else if (mode === 'resp_1s') ansArr = response_1major("1S", hcp, shape);
                 else if (mode === 'resp_1nt') ansArr = response_1nt(hcp, shape);
 
-                // หากคำตอบไม่ใช่ PASS หรือตรงเงื่อนไขสมบูรณ์ ให้ใช้ชุดนี้
                 if (ansArr && ansArr[0]) {
                     return {
                         hcp: hcp,
@@ -719,7 +712,6 @@
 
         function dealCardsForCounts(sc, hc, dc, cc) {
             const allRanks = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
-            // สับไพ่จำลอง
             let deck = [];
             allRanks.forEach(r => {
                 deck.push({ rank: r, val: r==='A'?4:r==='K'?3:r==='Q'?2:r==='J'?1:0 });
@@ -829,42 +821,52 @@
             document.getElementById('submitBtn').style.opacity = '1';
         }
 
-        function submitAnswer() {
+        async function submitAnswer() {
             let userAns = selectedLevel === 'Pass' ? 'PASS' : (selectedLevel + selectedSuit);
             let correctAns = currentHandData.ans.toUpperCase();
+            let isCorrect = (userAns === correctAns);
 
             let fb = document.getElementById('feedbackBox');
             fb.style.display = 'block';
+            fb.className = isCorrect ? 'feedback-box correct' : 'feedback-box wrong';
+            fb.innerHTML = `🤖 น้องบริดจ์กำลังตรวจคำตอบและเรียบเรียงคำอธิบายให้อยู่นะคะ... ⏳`;
+
             let felt = document.getElementById('tableFeltBox');
             let actionArea = document.getElementById('actionArea');
             actionArea.style.display = 'block';
 
-            // ประโยคเฉลยสั้นและกระชับ
-            if (userAns === correctAns) {
+            if (isCorrect) {
                 playSound('correct');
                 felt.classList.add('anim-correct');
-                fb.className = 'feedback-box correct';
-                fb.innerHTML = `✔ ถูกต้อง! ตอบ: <strong>${correctAns}</strong><br><span style="font-size:0.9rem; font-weight:normal;">เหตุผล: ${currentHandData.exp}</span>`;
                 correctAnswersCount++;
-
-                if (isReviewMode) {
-                    removeWrongQuestion(currentAccount, currentHandData);
-                }
+                if (isReviewMode) removeWrongQuestion(currentAccount, currentHandData);
             } else {
                 playSound('wrong');
                 felt.classList.add('anim-wrong');
-                fb.className = 'feedback-box wrong';
-                fb.innerHTML = `✖ ไม่ถูกต้อง (คุณตอบ: ${userAns} | ที่ถูก: <strong>${correctAns}</strong>)<br><span style="font-size:0.9rem; font-weight:normal;">เหตุผล: ${currentHandData.exp}</span>`;
-
-                if (!isReviewMode) {
-                    addWrongQuestion(currentAccount, currentHandData);
-                }
+                if (!isReviewMode) addWrongQuestion(currentAccount, currentHandData);
             }
 
             document.getElementById('scoreCount').innerText = `ถูก: ${correctAnswersCount}/${currentQIndex}`;
             document.getElementById('submitBtn').disabled = true;
 
-            // ระบบตั้งเวลาถอยหลัง 30 วินาทีไปข้อถัดไปอัตโนมัติ
+            // ให้ AI (น้องบริดจ์) เขียนคำอธิบายสั้นๆ น่ารักๆ ตามกฎ Engine V1
+            let promptText = `
+            ผู้เล่นตอบข้อนี้: ${userAns} 
+            คำตอบที่ถูกต้องตามระบบ Engine V1 คือ: ${correctAns} 
+            สถานะ: ${isCorrect ? "ตอบถูกค่ะ" : "ตอบผิดค่ะ"}
+            ข้อมูลมือไพ่ข้อนี้: แต้ม ${currentHandData.hcp} HCP, ทรงไพ่ ${currentHandData.shape} (สเปด:${currentHandData.s}, ฮาร์ท:${currentHandData.h}, ข้าวหลามตัด:${currentHandData.d}, ดอกจิก:${currentHandData.c})
+            หลักการเดิม: ${currentHandData.exp}
+
+            ช่วยเขียนคำอธิบายเฉลยสั้นๆ กระชับ น่ารักๆ ตามคาแรคเตอร์น้องบริดจ์ (มีค่ะ/จ้าาา/อิโมจิ) ให้ผู้เล่นเข้าใจว่าทำไมถึงต้องตอบอันนี้ค่ะ
+            `;
+            let aiExplanation = await askBridgeAI(promptText);
+
+            if (isCorrect) {
+                fb.innerHTML = `✔ <strong>ถูกต้องค่ะ!</strong> ตอบ: <strong>${correctAns}</strong><br><span style="font-size:0.9rem; font-weight:normal; display:block; margin-top:5px;">${aiExplanation.replace(/\n/g, '<br>')}</span>`;
+            } else {
+                fb.innerHTML = `✖ <strong>ยังไม่ถูกน้าาา!</strong> (คุณตอบ: ${userAns} | ที่ถูก: <strong>${correctAns}</strong>)<br><span style="font-size:0.9rem; font-weight:normal; display:block; margin-top:5px;">${aiExplanation.replace(/\n/g, '<br>')}</span>`;
+            }
+
             let timeLeft = 30;
             let countdownEl = document.getElementById('countdownText');
             countdownEl.innerText = `ระบบจะเปลี่ยนข้ออัตโนมัติใน ${timeLeft} วินาที...`;
@@ -891,7 +893,7 @@
             loadNewQuestion();
         }
 
-        function finishPracticeSession() {
+        async function finishPracticeSession() {
             if (timerInterval) clearInterval(timerInterval);
             if (autoNextTimer) clearTimeout(autoNextTimer);
             if (countdownInterval) clearInterval(countdownInterval);
@@ -909,16 +911,19 @@
             let secPerQ = (totalSec / activeQuestionList.length).toFixed(1);
 
             document.getElementById('aiSummaryContent').innerHTML = `
-                ยินดีด้วยครับคุณ <strong>${currentAccount}</strong> คุณทำแบบฝึกหัดเสร็จเรียบร้อยแล้ว!<br><br>
-                ⏱ <strong>สถิติเวลาการฝึกซ้อม:</strong><br>
-                - เวลาทั้งหมด: <strong>${mins} นาที ${secs} วินาที</strong><br>
-                - ความเร็วเฉลี่ย: <strong>${secPerQ} วินาที / ข้อ</strong><br><br>
-                📊 <strong>สรุปผลสถิติภาพรวม:</strong><br>
-                - คะแนนความแม่นยำ: <strong>${accuracy}%</strong> (${correctAnswersCount} จาก ${activeQuestionList.length} ข้อ)<br><br>
-                🤖 <strong>AI Coach วิเคราะห์การฝึกซ้อม:</strong><br>
-                ${accuracy >= 80 ? 'เยี่ยมยอดมาก! ตัดสินใจได้อย่างแม่นยำและรวดเร็ว ทำเวลาได้ดีเยี่ยม' : 
-                  accuracy >= 50 ? 'ทำได้ดีในระดับหนึ่ง ลองเช็คเวลาต่อข้อดู หากใช้เวลานานเกินไปอาจต้องทบทวนกฎให้คล่องขึ้น' : 
-                  'แนะนำให้ลองใช้ปุ่ม "ฝึกซ้อมทวนเฉพาะข้อที่ตอบผิด" ที่หน้าหลัก เพื่อฝึกฝนข้อที่ยังหลุดบ่อยให้แม่นยำยิ่งขึ้นครับ'}
+                ⏱ <strong>สถิติเวลาการฝึกซ้อม:</strong> เวลา ${mins} นาที ${secs} วินาที (${secPerQ} วินาที/ข้อ)<br>
+                📊 <strong>คะแนนความแม่นยำ:</strong> ${accuracy}% (${correctAnswersCount} จาก ${activeQuestionList.length} ข้อ)<br><br>
+                🤖 <strong>น้องบริดจ์กำลังสรุปผลการฝึกซ้อมให้ฟังอยู่นะคะ...</strong> ⏳
+            `;
+
+            let promptMsg = `ผู้เล่นชื่อ ${currentAccount} เพิ่งทำแบบฝึกหัดบริดจ์ชุด 20 ข้อเสร็จ ได้ความแม่นยำ ${accuracy}% ใช้เวลาทั้งหมด ${mins} นาที ${secs} วินาที ช่วยเขียนสรุปและให้กำลังใจน่ารักๆ ตามคาแรคเตอร์น้องบริดจ์จ้าาา`;
+            
+            let aiResult = await askBridgeAI(promptMsg);
+
+            document.getElementById('aiSummaryContent').innerHTML = `
+                ⏱ <strong>สถิติเวลาการฝึกซ้อม:</strong> เวลา ${mins} นาที ${secs} วินาที (${secPerQ} วินาที/ข้อ)<br>
+                📊 <strong>คะแนนความแม่นยำ:</strong> ${accuracy}% (${correctAnswersCount} จาก ${activeQuestionList.length} ข้อ)<br><br>
+                🤖 <strong>น้องบริดจ์สรุปผลให้ฟังค่ะ:</strong><br>${aiResult.replace(/\n/g, '<br>')}
             `;
         }
 
