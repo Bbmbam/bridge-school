@@ -317,8 +317,8 @@
     </header>
 
     <div class="top-nav-bar">
-        <a href="index.html" class="nav-btn">&larr; กลับหน้าหลัก</a>
-        <a href="convention.html" class="nav-btn">เปิดดูคู่มือ Convention &rarr;</a>
+        <a href="index.html" class="nav-btn">← กลับหน้าหลัก</a>
+        <a href="convention.html" class="nav-btn">เปิดดูคู่มือ Convention →</a>
     </div>
 
     <div class="container">
@@ -403,7 +403,7 @@
                 <button class="response-btn disabled">Response 3C (ยังไม่พร้อมใช้งาน)</button>
             </div>
 
-            <button class="btn-primary" style="background: #6c757d; margin-top: 25px;" onclick="initDashboard()">&larr; กลับหน้าหลัก</button>
+            <button class="btn-primary" style="background: #6c757d; margin-top: 25px;" onclick="initDashboard()">← กลับหน้าหลัก</button>
         </div>
 
         <!-- 3. หน้าห้องฝึกซ้อม -->
@@ -465,7 +465,7 @@
             </div>
 
             <div class="action-area" id="actionArea">
-                <button class="next-btn" id="nextBtn" onclick="nextQuestion()">ข้อถัดไป &rarr;</button>
+                <button class="next-btn" id="nextBtn" onclick="nextQuestion()">ข้อถัดไป →</button>
                 <span class="countdown-text" id="countdownText">ระบบจะเปลี่ยนข้ออัตโนมัติใน 30 วินาที...</span>
             </div>
 
@@ -473,13 +473,30 @@
         </div>
 
         <!-- 4. หน้าสรุปผล AI Coach -->
-        <div id="viewSummary" class="card view-section" style="text-align: center;">
-            <h2 style="color: var(--primary);">🤖 AI Coach น้องบริดจ์สรุปผลการฝึกซ้อม</h2>
-            <p id="aiSummaryContent" style="text-align: left; background: #f8f9fa; padding: 20px; border-radius: 8px; line-height: 1.8;">
-                🤖 น้องบริดจ์กำลังประมวลผลสถิติและวิเคราะห์ภาพรวมให้คุณอยู่นะคะ รอสักครู่น้าาา... ⏳
-            </p>
-            <button class="btn-primary" style="max-width: 300px; margin-top: 20px;" onclick="initDashboard()">กลับสู่หน้าหลัก</button>
-        </div>
+<div id="viewSummary" class="card view-section" style="text-align: center;">
+    <h2 style="color: var(--primary);">
+        🤖 AI Coach น้องบริดจ์สรุปผลการฝึกซ้อม
+    </h2>
+
+    <p id="aiSummaryContent"
+       style="text-align: left; background: #f8f9fa; padding: 20px; border-radius: 8px; line-height: 1.8;">
+        🎉 ทำแบบฝึกหัดเสร็จแล้วค่ะ
+        กดปุ่มด้านล่างเพื่อให้น้องบริดจ์วิเคราะห์ผลงาน
+    </p>
+
+    <button class="btn-primary"
+            id="analyzeSummaryBtn"
+            style="max-width: 300px; margin-top: 20px;"
+            onclick="analyzeSummaryAI()">
+        🤖 วิเคราะห์ผลด้วย AI
+    </button>
+
+    <button class="btn-primary"
+            style="max-width: 300px; margin-top: 12px; background: #6c757d;"
+            onclick="initDashboard()">
+        กลับสู่หน้าหลัก
+    </button>
+</div>
 
     </div>
 
@@ -496,7 +513,6 @@
         let startTime = 0;
         let timerInterval = null;
         let elapsedTimeSeconds = 0;
-        let pausedTimeMs = 0;
 
         let selectedLevel = null;
         let selectedSuit = null;
@@ -659,25 +675,21 @@
             correctAnswersCount = 0;
             document.getElementById('quizCategoryTitle').innerText = titleStr;
             questionCountTotal = activeQuestionList.length;
+
             showView('viewQuiz');
+            
             elapsedTimeSeconds = 0;
-            pausedTimeMs = 0;
             startTime = Date.now();
             if (timerInterval) clearInterval(timerInterval);
             timerInterval = setInterval(() => {
-            elapsedTimeSeconds = Math.floor(
-            (Date.now() - startTime - pausedTimeMs) / 1000
-        );
+                elapsedTimeSeconds = Math.floor((Date.now() - startTime) / 1000);
+                let m = String(Math.floor(elapsedTimeSeconds / 60)).padStart(2, '0');
+                let s = String(elapsedTimeSeconds % 60).padStart(2, '0');
+                document.getElementById('timerText').innerText = `⏱ เวลา: ${m}:${s}`;
+            }, 1000);
 
-        let m = String(Math.floor(elapsedTimeSeconds / 60)).padStart(2, '0');
-        let s = String(elapsedTimeSeconds % 60).padStart(2, '0');
-
-        document.getElementById('timerText').innerText =
-            `⏱ เวลา: ${m}:${s}`;
-    }, 1000);
-
-    loadNewQuestion();
-}
+            loadNewQuestion();
+        }
 
         function generateCorrectHandAndQuiz(mode) {
             let sCount, hCount, dCount, cCount;
@@ -826,7 +838,7 @@
             document.getElementById('submitBtn').style.opacity = '1';
         }
 
-        async function submitAnswer() {
+        function submitAnswer() {
             let userAns = selectedLevel === 'Pass' ? 'PASS' : (selectedLevel + selectedSuit);
             let correctAns = currentHandData.ans.toUpperCase();
             let isCorrect = (userAns === correctAns);
@@ -834,7 +846,6 @@
             let fb = document.getElementById('feedbackBox');
             fb.style.display = 'block';
             fb.className = isCorrect ? 'feedback-box correct' : 'feedback-box wrong';
-            fb.innerHTML = `🤖 น้องบริดจ์กำลังตรวจคำตอบและเรียบเรียงคำอธิบายให้อยู่นะคะ... ⏳`;
 
             let felt = document.getElementById('tableFeltBox');
             let actionArea = document.getElementById('actionArea');
@@ -854,42 +865,13 @@
             document.getElementById('scoreCount').innerText = `ถูก: ${correctAnswersCount}/${currentQIndex}`;
             document.getElementById('submitBtn').disabled = true;
 
-            // ส่งข้อมูลโจทย์ ไพ่ในมือ และคำตอบของผู้เล่นไปให้ AI วิเคราะห์อย่างแม่นยำ
-            let promptText = `
-            โจทย์สถานการณ์: ${document.getElementById('scenarioText').innerText}
-            หน้าไพ่ในมือ:
-            - Spades ♠: ${currentHandData.sCards} (${currentHandData.s} ใบ)
-            - Hearts ♥: ${currentHandData.hCards} (${currentHandData.h} ใบ)
-            - Diamonds ♦: ${currentHandData.dCards} (${currentHandData.d} ใบ)
-            - Clubs ♣: ${currentHandData.cCards} (${currentHandData.c} ใบ)
-            แต้ม HCP: ${currentHandData.hcp} | ทรงไพ่ Shape: ${currentHandData.shape}
-
-            สิ่งที่ผู้เล่นตอบ: ${userAns}
-            คำตอบที่ถูกต้องตามระบบ: ${correctAns}
-            สถานะการตอบ: ${isCorrect ? "ตอบถูก" : "ตอบผิด"}
-            กฎอ้างอิง: ${currentHandData.exp}
-
-            ช่วยเขียนคำอธิบายเฉลยสั้นๆ กระชับ น่ารักๆ ตามคาแรคเตอร์น้องบริดจ์ (มีค่ะ/จ้าาา/อิโมจิ) ให้ผู้เล่นเข้าใจว่าทำไมถึงต้องตอบ ${correctAns} และอ้างอิงกฎบทที่ 1-2 ค่ะ
-            `;
-            if (timerInterval) clearInterval(timerInterval);
-            const aiWaitStart = Date.now();
-            let aiExplanation = await askBridgeAI(promptText);
-                pausedTimeMs += Date.now() - aiWaitStart;
-                timerInterval = setInterval(() => {
-                elapsedTimeSeconds = Math.floor(
-                (Date.now() - startTime - pausedTimeMs) / 1000
-                );
-
-            let m = String(Math.floor(elapsedTimeSeconds / 60)).padStart(2, '0');
-            let s = String(elapsedTimeSeconds % 60).padStart(2, '0');
-            document.getElementById('timerText').innerText =
-            `⏱ เวลา: ${m}:${s}`;
-            }, 1000);
+            // ดึงคำอธิบายตรงจาก engine.js ทันที ไม่เปลือง Token AI
+            let engineExplanation = currentHandData.exp;
 
             if (isCorrect) {
-                fb.innerHTML = `✔ <strong>ถูกต้องค่ะ!</strong> ตอบ: <strong>${correctAns}</strong><br><span style="font-size:0.9rem; font-weight:normal; display:block; margin-top:5px;">${aiExplanation.replace(/\n/g, '<br>')}</span>`;
+                fb.innerHTML = `✔ <strong>ถูกต้องค่ะ!</strong> ตอบ: <strong>${correctAns}</strong><br><span style="font-size:0.95rem; font-weight:normal; display:block; margin-top:5px;">เหตุผล: ${engineExplanation}</span>`;
             } else {
-                fb.innerHTML = `✖ <strong>ยังไม่ถูกน้าาา!</strong> (คุณตอบ: ${userAns} | ที่ถูก: <strong>${correctAns}</strong>)<br><span style="font-size:0.9rem; font-weight:normal; display:block; margin-top:5px;">${aiExplanation.replace(/\n/g, '<br>')}</span>`;
+                fb.innerHTML = `✖ <strong>ยังไม่ถูกน้าาา!</strong> (คุณตอบ: ${userAns} | ที่ถูก: <strong>${correctAns}</strong>)<br><span style="font-size:0.95rem; font-weight:normal; display:block; margin-top:5px;">เหตุผล: ${engineExplanation}</span>`;
             }
 
             let timeLeft = 30;
@@ -928,41 +910,165 @@
             }
 
             showView('viewSummary');
-            let accuracy = Math.round((correctAnswersCount / activeQuestionList.length) * 100);
-            
-            let totalSec = elapsedTimeSeconds;
-            let mins = Math.floor(totalSec / 60);
-            let secs = totalSec % 60;
-            let secPerQ = (totalSec / activeQuestionList.length).toFixed(1);
 
-            document.getElementById('aiSummaryContent').innerHTML = `
-                ⏱ <strong>สถิติเวลาการฝึกซ้อม:</strong> เวลา ${mins} นาที ${secs} วินาที (${secPerQ} วินาที/ข้อ)<br>
-                📊 <strong>คะแนนความแม่นยำ:</strong> ${accuracy}% (${correctAnswersCount} จาก ${activeQuestionList.length} ข้อ)<br><br>
-                🤖 <strong>น้องบริดจ์กำลังสรุปผลการฝึกซ้อมให้ฟังอยู่นะคะ...</strong> ⏳
-            `;
+    const totalQuestions = activeQuestionList.length;
+    const accuracy = totalQuestions > 0
+        ? Math.round((correctAnswersCount / totalQuestions) * 100)
+        : 0;
 
-            // ส่งข้อมูลสรุปสถิติทั้งหมดไปให้น้องบริดจ์วิเคราะห์
-            let promptMsg = `
-            ผู้เล่นชื่อ ${currentAccount} เพิ่งทำแบบฝึกหัดบริดจ์ชุด 20 ข้อเสร็จ:
-            - คะแนนความแม่นยำ: ${accuracy}% (${correctAnswersCount} จาก ${activeQuestionList.length} ข้อ)
-            - เวลาที่ใช้ทั้งหมด: ${mins} นาที ${secs} วินาที (เฉลี่ย ${secPerQ} วินาทีต่อข้อ)
+    const totalSec = elapsedTimeSeconds;
+    const mins = Math.floor(totalSec / 60);
+    const secs = totalSec % 60;
+    const secPerQ = totalQuestions > 0
+        ? (totalSec / totalQuestions).toFixed(1)
+        : "0.0";
 
-            ช่วยเขียนสรุปผลงาน วิเคราะห์สถิติ และให้กำลังใจน่ารักๆ พร้อมแนะนำเทคนิคตามคาแรคเตอร์น้องบริดจ์จ้าาา
-            `;
-            let aiResult = await askBridgeAI(promptMsg);
+    // แสดงสถิติก่อน โดยยังไม่เรียก AI
+    document.getElementById('aiSummaryContent').innerHTML = `
+        ⏱ <strong>สถิติเวลาการฝึกซ้อม:</strong>
+        เวลา ${mins} นาที ${secs} วินาที
+        (${secPerQ} วินาที/ข้อ)<br>
 
-            document.getElementById('aiSummaryContent').innerHTML = `
-                ⏱ <strong>สถิติเวลาการฝึกซ้อม:</strong> เวลา ${mins} นาที ${secs} วินาที (${secPerQ} วินาที/ข้อ)<br>
-                📊 <strong>คะแนนความแม่นยำ:</strong> ${accuracy}% (${correctAnswersCount} จาก ${activeQuestionList.length} ข้อ)<br><br>
-                🤖 <strong>น้องบริดจ์สรุปผลให้ฟังค่ะ:</strong><br>${aiResult.replace(/\n/g, '<br>')}
-            `;
+        📊 <strong>คะแนนความแม่นยำ:</strong>
+        ${accuracy}% (${correctAnswersCount} จาก ${totalQuestions} ข้อ)<br><br>
+
+        🎉 ทำแบบฝึกหัดเสร็จแล้วค่ะ!<br>
+        หากต้องการให้น้องบริดจ์วิเคราะห์ผลงานภาพรวม
+        กดปุ่มด้านล่างได้เลยนะค้า 🥰
+    `;
+
+    // เก็บสถิติไว้ให้ฟังก์ชันวิเคราะห์ AI ใช้ภายหลัง
+    window.bridgePracticeSummary = {
+        accuracy,
+        correctAnswersCount,
+        totalQuestions,
+        mins,
+        secs,
+        secPerQ,
+        currentAccount
+    };
+
+    // เปิดให้กดวิเคราะห์ได้เมื่อจบแบบฝึกหัด
+    const analyzeBtn = document.getElementById('analyzeSummaryBtn');
+
+    if (analyzeBtn) {
+        analyzeBtn.disabled = false;
+        analyzeBtn.textContent = '🤖 วิเคราะห์ผลด้วย AI';
+    }
+}
+
+
+// ป้องกันการเรียก AI ซ้ำระหว่างกำลังวิเคราะห์
+let isAnalyzingSummary = false;
+
+async function analyzeSummaryAI() {
+    if (isAnalyzingSummary) return;
+
+    const summary = window.bridgePracticeSummary;
+
+    if (!summary) {
+        alert('กรุณาทำแบบฝึกหัดให้เสร็จก่อนนะคะ 🥰');
+        return;
+    }
+
+    const content = document.getElementById('aiSummaryContent');
+    const analyzeBtn = document.getElementById('analyzeSummaryBtn');
+
+    isAnalyzingSummary = true;
+
+    if (analyzeBtn) {
+        analyzeBtn.disabled = true;
+        analyzeBtn.textContent = '⏳ น้องบริดจ์กำลังวิเคราะห์...';
+    }
+
+    content.innerHTML = `
+        ⏱ <strong>สถิติเวลาการฝึกซ้อม:</strong>
+        เวลา ${summary.mins} นาที ${summary.secs} วินาที
+        (${summary.secPerQ} วินาที/ข้อ)<br>
+
+        📊 <strong>คะแนนความแม่นยำ:</strong>
+        ${summary.accuracy}%
+        (${summary.correctAnswersCount} จาก ${summary.totalQuestions} ข้อ)<br><br>
+
+        🤖 น้องบริดจ์กำลังวิเคราะห์ผลงานภาพรวมให้อยู่นะค้า... ⏳
+    `;
+
+    const promptMsg = `
+ผู้เล่นชื่อ ${summary.currentAccount || 'ผู้เล่น'} เพิ่งทำแบบฝึกหัดบริดจ์เสร็จ
+
+- จำนวนข้อทั้งหมด: ${summary.totalQuestions} ข้อ
+- คะแนนความแม่นยำ: ${summary.accuracy}%
+  (${summary.correctAnswersCount} จาก ${summary.totalQuestions} ข้อ)
+- เวลาที่ใช้ทั้งหมด: ${summary.mins} นาที ${summary.secs} วินาที
+- เวลาเฉลี่ย: ${summary.secPerQ} วินาทีต่อข้อ
+
+ช่วยสรุปผลงาน วิเคราะห์สถิติจากข้อมูลที่มี
+ให้กำลังใจอย่างเป็นกันเองในคาแรกเตอร์น้องบริดจ์
+และแนะนำแนวทางฝึกต่อไปอย่างกระชับ
+
+ห้ามแต่งข้อมูลเกี่ยวกับข้อที่ตอบผิดหรือจุดอ่อนเฉพาะเรื่อง
+เพราะยังไม่มีข้อมูลรายละเอียดของแต่ละข้อในคำขอนี้
+`;
+
+    try {
+        // เรียก AI เฉพาะตอนผู้เล่นกดปุ่มนี้
+        const aiResult = await askBridgeAI(promptMsg, {
+            type: "summary"
+        });
+
+        // แสดงข้อความ AI อย่างปลอดภัย
+        const safeResult = String(aiResult ?? '').replace(
+            /[&<>"']/g,
+            char => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            })[char]
+        );
+
+        content.innerHTML = `
+            ⏱ <strong>สถิติเวลาการฝึกซ้อม:</strong>
+            เวลา ${summary.mins} นาที ${summary.secs} วินาที
+            (${summary.secPerQ} วินาที/ข้อ)<br>
+
+            📊 <strong>คะแนนความแม่นยำ:</strong>
+            ${summary.accuracy}%
+            (${summary.correctAnswersCount} จาก ${summary.totalQuestions} ข้อ)<br><br>
+
+            🤖 <strong>น้องบริดจ์สรุปผลให้ฟังค่ะ:</strong><br>
+            ${safeResult.replace(/\n/g, '<br>')}
+        `;
+
+    } catch (error) {
+        console.error('AI Summary Error:', error);
+
+        content.innerHTML += `
+            <br><br>🥺 น้องบริดจ์วิเคราะห์ไม่สำเร็จ
+            ลองกดปุ่มวิเคราะห์อีกครั้งได้นะคะ
+        `;
+
+    } finally {
+        isAnalyzingSummary = false;
+
+        if (analyzeBtn) {
+            analyzeBtn.disabled = false;
+            analyzeBtn.textContent = '🤖 วิเคราะห์ผลด้วย AI อีกครั้ง';
         }
+    }
+}
 
-        window.onload = function() {
-            let user = localStorage.getItem('bridge_logged_user');
-            if (user) { currentAccount = user; initDashboard(); }
-            else { showView('viewLogin'); }
-        };
+window.onload = function() {
+    let user = localStorage.getItem('bridge_logged_user');
+
+    if (user) {
+        currentAccount = user;
+        initDashboard();
+    } else {
+        showView('viewLogin');
+    }
+};
     </script>
 </body>
 </html>
