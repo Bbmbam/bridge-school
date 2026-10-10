@@ -25,7 +25,7 @@
         header {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
-            padding: 40px 20px;
+            padding: 30px 20px;
             text-align: center;
         }
         header h1 {
@@ -36,50 +36,104 @@
             font-style: italic;
             opacity: 0.9;
         }
-        .container {
-            max-width: 900px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
-        .nav-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
-            cursor: pointer;
-        }
-        .nav-tab-btn {
-            flex: 1;
-            text-align: center;
-            padding: 12px;
-            background: #e9ecef;
-            color: var(--primary);
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 1rem;
-            transition: 0.3s;
-        }
-        .nav-tab-btn:hover, .nav-tab-btn.active {
+        .back-home {
+            display: inline-block;
+            margin: 15px 20px 0 20px;
+            padding: 8px 16px;
             background: var(--secondary);
             color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: 0.3s;
         }
-        .section-box {
-            display: none; /* ซ่อนไว้ก่อนทั้งหมด */
+        .back-home:hover {
+            background: var(--primary);
+        }
+        
+        /* Layout แบ่งหน้าจอเป็น 2 ฝั่ง */
+        .layout-container {
+            display: flex;
+            max-width: 1200px;
+            margin: 20px auto 40px auto;
+            padding: 0 20px;
+            gap: 30px;
+            align-items: flex-start;
+        }
+
+        /* สารบัญด้านข้าง (Sidebar) */
+        sidebar {
+            width: 280px;
             background: var(--card-bg);
             border-radius: 12px;
-            padding: 30px;
-            margin-bottom: 30px;
+            padding: 20px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            border-left: 5px solid var(--accent);
+            position: sticky;
+            top: 20px;
+            max-height: 85vh;
+            overflow-y: auto;
+            border-top: 4px solid var(--accent);
         }
-        .section-box.active {
-            display: block; /* แสดงเฉพาะตัวที่เลือก */
+        sidebar h3 {
+            margin-top: 0;
+            color: var(--primary);
+            font-size: 1.1rem;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 8px;
         }
+        .toc-search {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            box-sizing: border-box;
+        }
+        .toc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .toc-list li {
+            margin-bottom: 6px;
+        }
+        .toc-list a {
+            color: var(--text-main);
+            text-decoration: none;
+            display: block;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: 0.2s;
+        }
+        .toc-list a:hover {
+            background: #e8f5e9;
+            color: var(--secondary);
+            padding-left: 14px;
+        }
+        .toc-sub {
+            padding-left: 15px;
+            margin-top: 4px;
+            font-size: 0.85rem;
+        }
+
+        /* ส่วนเนื้อหาหลักด้านขวา */
+        main-content {
+            flex: 1;
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
         h2 {
             color: var(--primary);
             border-bottom: 2px solid #e9ecef;
             padding-bottom: 8px;
+            margin-top: 40px;
+        }
+        h2:first-of-type {
             margin-top: 0;
         }
         h3 {
@@ -107,19 +161,32 @@
         li {
             margin-bottom: 8px;
         }
-        .back-btn {
-            display: inline-block;
+        .rule-card {
+            background: #f8f9fa;
+            border-left: 4px solid var(--secondary);
+            padding: 15px 20px;
             margin-bottom: 20px;
-            padding: 8px 16px;
-            background: var(--secondary);
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: bold;
-            transition: 0.3s;
+            border-radius: 0 8px 8px 0;
         }
-        .back-btn:hover {
-            background: var(--primary);
+        .rule-card h4 {
+            margin: 0 0 8px 0;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+        .sub-section {
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 900px) {
+            .layout-container {
+                flex-direction: column;
+            }
+            sidebar {
+                width: 100%;
+                position: relative;
+                top: 0;
+                max-height: none;
+            }
         }
     </style>
 </head>
@@ -130,185 +197,291 @@
         <p>By Kridsadayut Plengsap</p>
     </header>
 
-    <div class="container">
-        <a href="index.html" class="back-btn">&larr; กลับหน้าหลัก</a>
+    <a href="index.html" class="back-home">&larr; กลับหน้าหลัก</a>
 
-        <!-- ปุ่มกดเปลี่ยนหน้าจอเนื้อหา -->
-        <div class="nav-tabs">
-            <button class="nav-tab-btn active" onclick="switchTab(event, 'fundamental')">บทที่ 1: Fundamental Rules</button>
-            <button class="nav-tab-btn" onclick="switchTab(event, 'opening')">บทที่ 1 & 2: Opening Structure</button>
-            <button class="nav-tab-btn" onclick="switchTab(event, 'responses')">Responses & Core Engine</button>
-        </div>
-
-        <!-- บทที่ 1: Fundamental Rules -->
-        <div id="fundamental" class="section-box active">
-            <h2>บทที่ 1: Fundamental Rules of the System</h2>
-            
-            <h3>Rule 1: Transfer First</h3>
-            <p>เมื่อมีโอกาสใช้ Transfer ให้ใช้ Transfer ก่อน</p>
-            <p><strong>เหตุผล:</strong></p>
-            <ul>
-                <li>หา Major Fit ได้เร็ว</li>
-                <li>เก็บพื้นที่ประมูล</li>
-                <li>ซ่อนมือคนเปิด</li>
+    <div class="layout-container">
+        <!-- สารบัญด้านข้าง -->
+        <sidebar>
+            <h3>สารบัญคู่มือ</h3>
+            <input type="text" id="searchToc" class="toc-search" placeholder="ค้นหาหัวข้อ..." onkeyup="filterToc()">
+            <ul class="toc-list" id="tocList">
+                <li><a href="#ch1">บทที่ 1: Fundamental Rules</a>
+                    <ul class="toc-list toc-sub">
+                        <li><a href="#rule1">Rule 1: Transfer First</a></li>
+                        <li><a href="#rule2">Rule 2: Shape Before Strength</a></li>
+                        <li><a href="#rule3">Rule 3: Strong Hands Speak</a></li>
+                        <li><a href="#rule4">Rule 4: Ask Before Guessing</a></li>
+                        <li><a href="#rule5">Rule 5: Find Fit Before Game</a></li>
+                    </ul>
+                </li>
+                <li><a href="#ch2-open1">บทที่ 1: Opening Structure</a></li>
+                <li><a href="#ch2-resp1">OPENING 1♣ & Responses</a>
+                    <ul class="toc-list toc-sub">
+                        <li><a href="#transfer-majors">A. Transfer Response to Majors</a></li>
+                        <li><a href="#resp-neg">B. Response Negative 1♠</a></li>
+                        <li><a href="#resp-1n">C. Response 1N GF Relay</a></li>
+                        <li><a href="#resp-l2">D. Response Level 2</a></li>
+                    </ul>
+                </li>
+                <li><a href="#core-engine">Core Engine</a>
+                    <ul class="toc-list toc-sub">
+                        <li><a href="#transfer-resp">1. Transfer Response</a></li>
+                        <li><a href="#transfer-cb">2. Transfer Checkback</a></li>
+                        <li><a href="#strong-fit">3. Strong Fit Support</a></li>
+                        <li><a href="#strong-nofit">4. Strong No-Fit (Gazilli)</a></li>
+                        <li><a href="#gf-relay">5. Game Force Relay</a></li>
+                        <li><a href="#shape-relay">6. Shape Relay Structure</a></li>
+                        <li><a href="#slam-conv">7. Slam Convention</a></li>
+                    </ul>
+                </li>
+                <li><a href="#ch2-part2">บทที่ 2: Opening & Rebid Details</a>
+                    <ul class="toc-list toc-sub">
+                        <li><a href="#game-try">Game Try Structure</a></li>
+                        <li><a href="#resp-1n-detail">E. Response 1N GF Relay (Ch.2)</a></li>
+                        <li><a href="#resp-l2-detail">F. Response Level 2 (Ch.2)</a></li>
+                    </ul>
+                </li>
             </ul>
+        </sidebar>
 
-            <h3>Rule 2: Shape Before Strength</h3>
-            <p>ก่อนถามแต้มให้หารูปไพ่ก่อน</p>
-            <p>ลำดับข้อมูลคือ:<br>
-            Fit &rarr; Shape &rarr; Shortness &rarr; Control &rarr; Strength</p>
-            <p>ดังนั้น Game Force Relay ไม่ใช่ถามแต้ม แต่ถาม Shape</p>
+        <!-- เนื้อหาหลักยาวต่อเนื่อง -->
+        <main-content>
+            <!-- บทที่ 1: Fundamental Rules -->
+            <section id="ch1">
+                <h2>บทที่ 1: Fundamental Rules of the System</h2>
+                
+                <div class="rule-card" id="rule1">
+                    <h4>Rule 1: Transfer First</h4>
+                    <p>เมื่อมีโอกาสใช้ Transfer ให้ใช้ Transfer ก่อน</p>
+                    <p><strong>เหตุผล:</strong></p>
+                    <ul>
+                        <li>หา Major Fit ได้เร็ว</li>
+                        <li>เก็บพื้นที่ประมูล</li>
+                        <li>ซ่อนมือคนเปิด</li>
+                    </ul>
+                </div>
 
-            <h3>Rule 3: Strong Hands Speak</h3>
-            <p>มือขั้นต่ำประมูลธรรมชาติ มือที่มี 16+ hcp จะมี Core Engine ในการแสดง</p>
+                <div class="rule-card" id="rule2">
+                    <h4>Rule 2: Shape Before Strength</h4>
+                    <p>ก่อนถามแต้มให้หารูปไพ่ก่อน</p>
+                    <p><strong>ลำดับข้อมูลคือ:</strong> Fit &rarr; Shape &rarr; Shortness &rarr; Control &rarr; Strength</p>
+                    <p><em>ดังนั้น Game Force Relay ไม่ใช่ถามแต้ม แต่ถาม Shape</em></p>
+                </div>
 
-            <h3>Rule 4: Ask Before Guessing</h3>
-            <p>ห้ามเดา ถ้ายังมีพื้นที่ประมูล ให้ถามก่อน จึงเกิด:</p>
-            <ul>
-                <li>Shape Relay</li>
-                <li>Transfer Checkback</li>
-                <li>Shape Stayman</li>
-            </ul>
+                <div class="rule-card" id="rule3">
+                    <h4>Rule 3: Strong Hands Speak</h4>
+                    <p>มือขั้นต่ำประมูลธรรมชาติ มือที่มี 16+ hcp จะมี Core Engine ในการแสดง</p>
+                </div>
 
-            <h3>Rule 5: Find Fit Before Game</h3>
-            <p>เกมจะตัดสินหลังรู้ Fit แล้ว ไม่ใช่หลังนับแต้ม</p>
-            <p><strong>ตัวอย่าง:</strong><br>
-            15 + 10 = 25 ไม่จำเป็นต้องได้เกมเสมอ และ 14 + 9 = 23 บางครั้งก็ได้เกม ถ้า Shape ดี</p>
-        </div>
+                <div class="rule-card" id="rule4">
+                    <h4>Rule 4: Ask Before Guessing</h4>
+                    <p>ห้ามเดา ถ้ายังมีพื้นที่ประมูล ให้ถามก่อน จึงเกิด:</p>
+                    <ul>
+                        <li>Shape Relay</li>
+                        <li>Transfer Checkback</li>
+                        <li>Shape Stayman</li>
+                    </ul>
+                </div>
 
-        <!-- บทที่ 1 & 2: Opening Structure -->
-        <div id="opening" class="section-box">
-            <h2>Opening Structure (ภาพรวมการเปิดประมูล)</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Open</th>
-                        <th>Detail</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td><strong>Pass</strong></td><td>Normal 0-10</td></tr>
-                    <tr><td><strong>1♣</strong></td><td>11-20 ♣2+ IF BAL NOT PROMISE LONGER SUIT EX (5332), (4432)</td></tr>
-                    <tr><td><strong>1♦</strong></td><td>11-20 UNBAL ♦4+</td></tr>
-                    <tr><td><strong>1♥</strong></td><td>11-20 ♥5 no 5332 except 17+</td></tr>
-                    <tr><td><strong>1♠</strong></td><td>11-20 ♠5 no 5332 except 17+</td></tr>
-                    <tr><td><strong>1N</strong></td><td>14-16 Balance, 6m, 5M, Singleton OK</td></tr>
-                    <tr><td><strong>2♣</strong></td><td>21+ or 8.5 playing tricks</td></tr>
-                    <tr>
-                        <td><strong>2♦</strong></td>
-                        <td>1. Weak 1M<br>2. 17+ 2M 55</td>
-                    </tr>
-                    <tr><td><strong>2♥</strong></td><td>11-13 ♥6 can be 9-10 when ♥ 2 top + A/K outside or ♥7 + K outside</td></tr>
-                    <tr><td><strong>2♠</strong></td><td>11-13 ♠6 can be 9-10 when ♠ 2 top + A/K outside or ♠7 + K outside</td></tr>
-                    <tr><td><strong>2N</strong></td><td>20-22 Bal 5M ok</td></tr>
-                    <tr><td><strong>3♣ / 3♦</strong></td><td>Pre-emptive ♣6 / ♦6</td></tr>
-                    <tr><td><strong>3♥ / 3♠</strong></td><td>Pre-emptive ♥7 / ♠7</td></tr>
-                    <tr><td><strong>3N</strong></td><td>Solid M 7+</td></tr>
-                    <tr><td><strong>4♣ / 4♦</strong></td><td>Pre-emptive ♣7-8 / ♦7-8</td></tr>
-                    <tr><td><strong>4♥ / 4♠</strong></td><td>Pre-emptive ♥ / ♠</td></tr>
-                </tbody>
-            </table>
-        </div>
+                <div class="rule-card" id="rule5">
+                    <h4>Rule 5: Find Fit Before Game</h4>
+                    <p>เกมจะตัดสินหลังรู้ Fit แล้ว ไม่ใช่หลังนับแต้ม</p>
+                    <p><strong>ตัวอย่าง:</strong> 15 + 10 = 25 ไม่จำเป็นต้องได้เกมเสมอ และ 14 + 9 = 23 บางครั้งก็ได้เกม ถ้า Shape ดี</p>
+                </div>
+            </section>
 
-        <!-- Responses & Core Engine -->
-        <div id="responses" class="section-box">
-            <h2>OPENING 1♣ & Responses (รายละเอียดเชิงลึก)</h2>
-            <p><strong>นิยาม:</strong> 11-13 Balance open 1♣ | 17-19 Balance open 1♣ except M5 | 11-20 ♣4+ unbalance</p>
-            
-            <h3>Responding to 1♣ Opening</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Response</th>
-                        <th>Detail</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td><strong>1♦</strong></td><td>Transfer ♥4+</td></tr>
-                    <tr><td><strong>1♥</strong></td><td>Transfer ♠4+</td></tr>
-                    <tr><td><strong>1♠</strong></td><td>0-10 no M4, no void, no 6m</td></tr>
-                    <tr><td><strong>1N</strong></td><td>Game Force no M5</td></tr>
-                    <tr><td><strong>2♣</strong></td><td>Transfer ♦6</td></tr>
-                    <tr><td><strong>2♦</strong></td><td>Game Invitation ♣5+</td></tr>
-                    <tr><td><strong>2♥</strong></td><td>Game Invitation Bal</td></tr>
-                    <tr><td><strong>2♠</strong></td><td>Blank</td></tr>
-                    <tr><td><strong>2N</strong></td><td>Blank</td></tr>
-                    <tr><td><strong>3♣</strong></td><td>NF ♣6</td></tr>
-                    <tr><td><strong>3♦</strong></td><td>GF BAL NO 4M [NOT GOOD FOR NT]</td></tr>
-                </tbody>
-            </table>
+            <!-- Opening Structure (Ch.1) -->
+            <section id="ch2-open1">
+                <h2>บทที่ 1: Opening Structure</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Open</th>
+                            <th>Detail</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Pass</strong></td><td>Normal 0-10</td></tr>
+                        <tr><td><strong>1♣</strong></td><td>11-20 ♣2+ IF BAL NOT PROMISE LONGER SUIT EX (5332), (4432)</td></tr>
+                        <tr><td><strong>1♦</strong></td><td>11-20 UNBAL ♦4+</td></tr>
+                        <tr><td><strong>1♥</strong></td><td>11-20 ♥5 no 5332 except 17+</td></tr>
+                        <tr><td><strong>1♠</strong></td><td>11-20 ♠5 no 5332 except 17+</td></tr>
+                        <tr><td><strong>1N</strong></td><td>14-16 Balance, 6m, 5M, Singleton OK</td></tr>
+                        <tr><td><strong>2♣</strong></td><td>21+ or 8.5 playing tricks</td></tr>
+                        <tr><td><strong>2♦</strong></td><td>1. Weak 1M<br>2. 17+ 2M 55</td></tr>
+                        <tr><td><strong>2♥</strong></td><td>11-13 ♥6 can be 9-10 when ♥ 2 top + A/K outside or ♥7 + K outside</td></tr>
+                        <tr><td><strong>2♠</strong></td><td>11-13 ♠6 can be 9-10 when ♠ 2 top + A/K outside or ♠7 + K outside</td></tr>
+                        <tr><td><strong>2N</strong></td><td>20-22 Bal 5M ok</td></tr>
+                        <tr><td><strong>3♣ / 3♦</strong></td><td>Pre-emptive ♣6 / ♦6</td></tr>
+                        <tr><td><strong>3♥ / 3♠</strong></td><td>Pre-emptive ♥7 / ♠7</td></tr>
+                        <tr><td><strong>3N</strong></td><td>Solid M 7+</td></tr>
+                        <tr><td><strong>4♣ / 4♦</strong></td><td>Pre-emptive ♣7-8 / ♦7-8</td></tr>
+                        <tr><td><strong>4♥ / 4♠</strong></td><td>Pre-emptive ♥ / ♠</td></tr>
+                    </tbody>
+                </table>
+            </section>
 
-            <h3>A. Transfer Response to Majors</h3>
-            <p>1♣ - 1♦ (Transfer ♥) หรือ 1♣ - 1♥ (Transfer ♠)<br>
-            Opener ถามตัวเองเพียง 2 ข้อ: <strong>มี Support หรือไม่? / มี Extra Values หรือไม่?</strong></p>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Rebid</th>
-                        <th>Meaning</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td><strong>1M</strong></td><td>Accept Transfer</td></tr>
-                    <tr><td><strong>1♠</strong></td><td>Minimum Unbalanced</td></tr>
-                    <tr><td><strong>1NT</strong></td><td>Strong No-Fit</td></tr>
-                    <tr><td><strong>2♣</strong></td><td>Natural Club</td></tr>
-                    <tr><td><strong>2M</strong></td><td>Medium Support</td></tr>
-                    <tr><td><strong>2M-1</strong></td><td>Strong Fit 3 เป็นตำแหน่งที่แน่นอน</td></tr>
-                    <tr><td><strong>2oM or 2M-1</strong></td><td>Strong Fit 4 แปรผันตาม Strong Fit 3</td></tr>
-                    <tr><td><strong>2NT</strong></td><td>NT Support</td></tr>
-                </tbody>
-            </table>
+            <!-- OPENING 1♣ & Responses -->
+            <section id="ch2-resp1">
+                <h2>OPENING 1♣ & Responses</h2>
+                <p><strong>นิยาม:</strong> 11-13 Balance open 1♣ | 17-19 Balance open 1♣ except M5 | 11-20 ♣4+ unbalance</p>
+                
+                <h3>Responding to 1♣ Opening</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Response</th>
+                            <th>Meaning</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>1♦</strong></td><td>Transfer ♥4+</td></tr>
+                        <tr><td><strong>1♥</strong></td><td>Transfer ♠4+</td></tr>
+                        <tr><td><strong>1♠</strong></td><td>0-10 no M4, no void, no 6m</td></tr>
+                        <tr><td><strong>1N</strong></td><td>Game Force no M5</td></tr>
+                        <tr><td><strong>2♣</strong></td><td>Transfer ♦6</td></tr>
+                        <tr><td><strong>2♦</strong></td><td>Game Invitation ♣5+</td></tr>
+                        <tr><td><strong>2♥</strong></td><td>Game Invitation Bal</td></tr>
+                        <tr><td><strong>2♠ / 2N</strong></td><td>Blank</td></tr>
+                        <tr><td><strong>3♣</strong></td><td>NF ♣6</td></tr>
+                        <tr><td><strong>3♦</strong></td><td>GF BAL NO 4M [NOT GOOD FOR NT]</td></tr>
+                    </tbody>
+                </table>
 
-            <h3>B. Response Negative 1♠</h3>
-            <p><strong>นิยาม:</strong> แต้ม 6-10 ไม่มี M4 และ ไม่มี minor 6+</p>
-            <ul>
-                <li>Opener rebid Pass (11-13 ♠5) หรือ 1N (maybe 4-4-1-4) หรือ 2♣ (11-15 ♣5) หรือ 2♦ (17-19 Bal or 16+ ♦4♣5) หรือ 2♥ (15+ stop or suit) หรือ 2♠ (16+ stop or suit) หรือ 2N (16+ ♣6) หรือ 3♣ (13-15 good ♣6)</li>
-            </ul>
+                <div class="sub-section" id="transfer-majors">
+                    <h3>A. Transfer Response to Majors</h3>
+                    <p>1♣-1♦ (Transfer ♥) หรือ 1♣-1♥ (Transfer ♠)<br>Opener ถามตัวเองเพียง 2 ข้อ: <strong>มี Support หรือไม่? / มี Extra Values หรือไม่?</strong></p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Rebid</th>
+                                <th>Meaning</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>1M</strong></td><td>Accept Transfer</td></tr>
+                            <tr><td><strong>1♠</strong></td><td>Minimum Unbalanced</td></tr>
+                            <tr><td><strong>1NT</strong></td><td>Strong No-Fit</td></tr>
+                            <tr><td><strong>2♣</strong></td><td>Natural Club</td></tr>
+                            <tr><td><strong>2M</strong></td><td>Medium Support</td></tr>
+                            <tr><td><strong>2M-1</strong></td><td>Strong Fit 3 เป็นตำแหน่งที่แน่นอน</td></tr>
+                            <tr><td><strong>2oM or 2M-1</strong></td><td>Strong Fit 4 แปรผันตาม Strong Fit 3</td></tr>
+                            <tr><td><strong>2NT</strong></td><td>NT Support</td></tr>
+                        </tbody>
+                    </table>
+                </div>
 
-            <h3>C. Response 1N Game Force Relay</h3>
-            <p><strong>นิยาม:</strong> ไพ่แต้มเกมต้องการรู้ Shape คนเปิด (1♣ - 1N)</p>
-            <ul>
-                <li><strong>Opener rebid 2♣:</strong> Bal/444-1/544-0 (+1 responder = Relay Bid เช่น 2♥ = 4-4-1-4 ได้ shape ครบแล้วเข้าสู่ RKC, 2♠ = Balance ♣4+ ฯลฯ)</li>
-                <li><strong>Opener rebid 2♦:</strong> Transfer ♥4♣5 (เข้าสู่ Shape relay Step 1: Short Hi ♠, Step 2: Short Lo ♦, Step 3: no short, Step 4: 64, Step 5: 55)</li>
-                <li><strong>Opener rebid 2♥:</strong> Transfer ♠4♣5</li>
-                <li><strong>Opener rebid 2♠:</strong> Transfer ♣6</li>
-                <li><strong>Opener rebid 2N / 3♣ / 3♦:</strong> Transfer รายละเอียดรูปแบบสั้นและยาวตามต้นฉบับ</li>
-            </ul>
+                <div class="sub-section" id="resp-neg">
+                    <h3>B. Response Negative 1♠</h3>
+                    <p><strong>นิยาม:</strong> แต้ม 6-10 ไม่มี M4 และไม่มี minor 6+</p>
+                    <p>Opener rebid: Pass (11-13 ♠5), 1N (maybe 4-4-1-4), 2♣ (11-15 ♣5), 2♦ (17-19 Bal or 16+ ♦4♣5), 2♥/2♠/2N/3♣ ตามลำดับต้นฉบับ</p>
+                </div>
 
-            <h3>D. Response Level 2</h3>
-            <p><strong>2♣ (Transfer ♦):</strong> NF ♦6 or GI+ ♦5+<br>
-            <strong>2♦ (GI ♣5+):</strong> Game invited promise ♣5<br>
-            <strong>2♥:</strong> GI Balanced</p>
+                <div class="sub-section" id="resp-1n">
+                    <h3>C. Response 1N Game Force Relay</h3>
+                    <p><strong>นิยาม:</strong> ไพ่แต้มเกมต้องการรู้ Shape คนเปิด (1♣ - 1N)</p>
+                    <p>Opener rebid: 2♣ (Bal/444-1/544-0), 2♦ (Transfer ♥4♣5), 2♥ (Transfer ♠4♣5), 2♠ (Transfer ♣6), 2N/3♣/3♦ (Transfer รูปแบบสั้น/ยาวตามลำดับ)</p>
+                </div>
 
-            <h3>Core Engine Summary</h3>
-            <ol>
-                <li><strong>Transfer Response:</strong> ใช้หาชุด Major Fit หลังเปิด 1♣ (1♣-1♦=♥, 1♣-1♥=♠)</li>
-                <li><strong>Transfer Checkback:</strong> ใช้หลังคนเปิด accept transfer 1M หรือ rebid 1♠ เพื่อแยก NF, GI, GF โดยไม่เสียพื้นที่</li>
-                <li><strong>Strong Fit Support:</strong> แบ่งเป็น Strong Fit 3 (16+, Support 3 ใบ, Unbalanced), Strong Fit 4 (16+, Support 4 ใบ), NT Fit 4 (17-19 Balanced Support 4 ใบ)</li>
-                <li><strong>Strong No-Fit (Gazilli):</strong> สำหรับมือแข็งที่ยังไม่พบ Major Fit (16+ Unbalanced หรือ 17-19 Balanced)</li>
-                <li><strong>Game Force Relay:</strong> ทราบ Shape ก่อนทราบแต้ม (1♣-1N และ 1M-2♣)</li>
-                <li><strong>Shape Relay Structure:</strong> โครงสร้าง Structure 54 และ Structure 6+</li>
-                <li><strong>Slam Convention:</strong> ROMAN KEY CARDS และ RECYCLE WITH VOID</li>
-            </ol>
-        </div>
+                <div class="sub-section" id="resp-l2">
+                    <h3>D. Response Level 2</h3>
+                    <p>2♣ = GI+ ♦5+ or NF ♦6 | 2♦ = GI+ ♣5+ | 2♥ = GI Balanced</p>
+                </div>
+            </section>
+
+            <!-- Core Engine -->
+            <section id="core-engine">
+                <h2>Core Engine</h2>
+                
+                <div class="sub-section" id="transfer-resp">
+                    <h3>1. Transfer Response</h3>
+                    <p>ใช้หาชุด Major Fit หลังเปิด 1♣ (1♣-1♦ = Hearts, 1♣-1♥ = Spades)<br>หลังจาก Transfer M ผู้เปิดตรวจดู Support และ Extra Values แล้วเลือก Bid ตามตาราง Rebid</p>
+                </div>
+
+                <div class="sub-section" id="transfer-cb">
+                    <h3>2. Transfer Checkback</h3>
+                    <p>ใช้หลังคนเปิด accept transfer 1M or rebid 1♠ เพื่อแยก NF, GI, GF โดยไม่เสียพื้นที่ (Bid ระดับ 2 = Transfer)</p>
+                </div>
+
+                <div class="sub-section" id="strong-fit">
+                    <h3>3. Strong Fit Support</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Shape</th>
+                                <th>Strength</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>Strong Fit 3</strong></td><td>3-card support unbalanced</td><td>16+</td></tr>
+                            <tr><td><strong>Strong Fit 4</strong></td><td>4-card support</td><td>16+</td></tr>
+                            <tr><td><strong>NT Fit 4</strong></td><td>4-card support Balanced</td><td>17+</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sub-section" id="strong-nofit">
+                    <h3>4. Strong No-Fit (Gazilli)</h3>
+                    <p>สำหรับมือแข็งที่ยังไม่พบ Major Fit (16+ Unbalanced หรือ 17-19 Balanced) เพื่อซ่อนลักษณะมือ แยก Minimum และ Extra Hands เข้าสู่ Shape Relay อย่างรวดเร็ว</p>
+                </div>
+
+                <div class="sub-section" id="gf-relay">
+                    <h3>5. Game Force Relay</h3>
+                    <p>1♣-1N และ 1M-2♣ เพื่อต้องการรู้ Shape ของคนเปิดก่อนทราบแต้ม (Shape &rarr; Short &rarr; Control)</p>
+                </div>
+
+                <div class="sub-section" id="shape-relay">
+                    <h3>6. Shape Relay Structure</h3>
+                    <p><strong>Structure 54:</strong> Step 1 (Short High), Step 2 (Short Lower), Step 3 (No short 5422), Step 4 (64), Step 5 (55)<br>
+                    <strong>Structure 6+:</strong> Step 1 (Have Short &rarr; ask HML), Step 2 (No short), Step 3-5 (64 low/medium/high)</p>
+                </div>
+
+                <div class="sub-section" id="slam-conv">
+                    <h3>7. Slam Convention</h3>
+                    <p>Roman Key Cards และ Recycle with Void ในการถาม Key Cards ด้านล่าง 4 Majors และ 4♠/4NT พร้อมการตอบสนองตาม Step, ถาม Trump Q และ Asking K รวมถึงการจัดการ Noise (DOPI/REPO)</p>
+                </div>
+            </section>
+
+            <!-- บทที่ 2 -->
+            <section id="ch2-part2">
+                <h2>บทที่ 2: Opening & Rebid Details</h2>
+                <p><strong>Opening Structure (บทที่ 2):</strong> รายละเอียดการเปิด 1♣ (11+ ♣ 0+, 11-14 bal can have 5M) พร้อม Response และรายละเอียด Game Try Structure, Response Negative 1♠, และ Response Level 2 ฉบับสมบูรณ์</p>
+                
+                <div class="sub-section" id="game-try">
+                    <h3>Game Try Structure</h3>
+                    <p>แนวคิดเมื่อเจอทรัมพ์ Major ที่ระดับ 2 เพื่อเช็ค min-max และ Honor หรือชุดสั้น (Short suit Game Try เช่น 2N สำหรับทรัมพ์ ♥ เป็น short suit ♠)</p>
+                </div>
+
+                <div class="sub-section" id="resp-1n-detail">
+                    <h3>E. Response 1N Game Force Relay (บทที่ 2)</h3>
+                    <p>รายละเอียดตาราง Step ของ Shape Relay และ Transfer 3 ชุดแรก + ชุดที่ 4 พร้อมระบบการจำง่ายๆ</p>
+                </div>
+
+                <div class="sub-section" id="resp-l2-detail">
+                    <h3>F. Response Level 2 (บทที่ 2)</h3>
+                    <p>รายละเอียดเชิงลึกของ 2♣ (Transfer ♦), 2♦ (GI ♣5+), และ 2♥ (GI Balanced)</p>
+                </div>
+            </section>
+        </main-content>
     </div>
 
     <script>
-        function switchTab(evt, tabId) {
-            // ซ่อนเนื้อหาทั้งหมด
-            let boxes = document.getElementsByClassName("section-box");
-            for (let box of boxes) {
-                box.classList.remove("active");
+        // ฟังก์ชันกรองหัวข้อในสารบัญตามช่องค้นหา
+        function filterToc() {
+            let input = document.getElementById('searchToc').value.toLowerCase();
+            let items = document.getElementById('tocList').getElementsByTagName('li');
+            for (let i = 0; i < items.length; i++) {
+                let a = items[i].getElementsByTagName('a')[0];
+                if (a) {
+                    let text = a.textContent || a.innerText;
+                    if (text.toLowerCase().indexOf(input) > -1) {
+                        items[i].style.display = "";
+                    } else {
+                        items[i].style.display = "none";
+                    }
+                }
             }
-            // เอาสถานะ active ออกจากทุกปุ่ม
-            let buttons = document.getElementsByClassName("nav-tab-btn");
-            for (let btn of buttons) {
-                btn.classList.remove("active");
-            }
-            // แสดงเฉพาะเนื้อหาที่เลือก และไฮไลท์ปุ่ม
-            document.getElementById(tabId).classList.add("active");
-            evt.currentTarget.classList.add("active");
         }
     </script>
 
