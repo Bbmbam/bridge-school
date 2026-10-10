@@ -51,6 +51,103 @@ function has_short(shape) {
     );
 }
 
+function cardRankWeight(r) {
+    const weights = {"A":14, "K":13, "Q":12, "J":11, "10":10, "9":9, "8":8, "7":7, "6":6, "5":5, "4":4, "3":3, "2":2};
+    return weights[r] || 0;
+}
+
+
+// ==========================================
+// DEAL 13 CARDS FROM A REAL 52-CARD DECK
+// สุ่มไพ่ 13 ใบจาก 52 ใบ แบบไม่คืนไพ่
+// ==========================================
+
+function dealCardsForCounts() {
+    const suits = ["S", "H", "D", "C"];
+
+    const ranks = [
+        "A", "K", "Q", "J", "10",
+        "9", "8", "7", "6", "5", "4", "3", "2"
+    ];
+
+    const rankValues = {
+        A: 4,
+        K: 3,
+        Q: 2,
+        J: 1
+    };
+
+    // สร้างสำรับมาตรฐาน 52 ใบ
+    const deck = [];
+
+    for (const suit of suits) {
+        for (const rank of ranks) {
+            deck.push({
+                suit: suit,
+                rank: rank,
+                hcp: rankValues[rank] || 0
+            });
+        }
+    }
+
+    // สุ่มสับสำรับด้วย Fisher-Yates
+    for (let i = deck.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+
+        [deck[i], deck[j]] = [deck[j], deck[i]];
+    }
+
+    // หยิบ 13 ใบแรก โดยไม่คืนไพ่
+    const hand = deck.slice(0, 13);
+
+    // แยกไพ่ตามดอก
+    const sList = hand
+        .filter(card => card.suit === "S")
+        .map(card => card.rank)
+        .sort((a, b) => cardRankWeight(b) - cardRankWeight(a));
+
+    const hList = hand
+        .filter(card => card.suit === "H")
+        .map(card => card.rank)
+        .sort((a, b) => cardRankWeight(b) - cardRankWeight(a));
+
+    const dList = hand
+        .filter(card => card.suit === "D")
+        .map(card => card.rank)
+        .sort((a, b) => cardRankWeight(b) - cardRankWeight(a));
+
+    const cList = hand
+        .filter(card => card.suit === "C")
+        .map(card => card.rank)
+        .sort((a, b) => cardRankWeight(b) - cardRankWeight(a));
+
+    // คำนวณ HCP จากไพ่จริงทั้ง 13 ใบ
+    const totalHCP = hand.reduce(
+        (total, card) => total + card.hcp,
+        0
+    );
+
+    // Shape เรียงตาม S-H-D-C
+    const shape =
+        `${sList.length}${hList.length}${dList.length}${cList.length}`;
+
+    return {
+        hand,
+        totalHCP,
+        shape,
+
+        s: sList.length,
+        h: hList.length,
+        d: dList.length,
+        c: cList.length,
+
+        sStr: sList.join(" "),
+        hStr: hList.join(" "),
+        dStr: dList.join(" "),
+        cStr: cList.join(" ")
+    };
+}
+
 
 // ==========================================
 // OPENING
@@ -556,16 +653,13 @@ function response_1c(hcp, shape, balanced = false, bad_suit = false) {
 
 
 // ==========================================
-// QUIZ GENERATOR HELPER
+// QUIZ GENERATOR HELPER (UPDATED FOR DECK)
 // ==========================================
 
 function generateQuizQuestion(mode) {
-    let hcp = Math.floor(Math.random() * 26);
-    let s = Math.floor(Math.random() * 10);
-    let h = Math.floor(Math.random() * (13 - s + 1));
-    let d = Math.floor(Math.random() * (13 - s - h + 1));
-    let c = 13 - s - h - d;
-    let shape = `${s}${h}${d}${c}`;
+    let dealt = dealCardsForCounts();
+    let hcp = dealt.totalHCP;
+    let shape = dealt.shape;
 
     let ansArr = ["PASS", "no good bid"];
     if (mode === 'opening') {
@@ -582,5 +676,18 @@ function generateQuizQuestion(mode) {
         ansArr = response_1nt(hcp, shape);
     }
 
-    return { hcp, shape, s, h, d, c, ans: ansArr[0], exp: ansArr[1] };
+    return { 
+        hcp: hcp, 
+        shape: shape, 
+        s: dealt.s, 
+        h: dealt.h, 
+        d: dealt.d, 
+        c: dealt.c, 
+        sCards: dealt.sStr,
+        hCards: dealt.hStr,
+        dCards: dealt.dStr,
+        cCards: dealt.cStr,
+        ans: ansArr[0], 
+        exp: ansArr[1] 
+    };
 }
