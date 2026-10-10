@@ -496,6 +496,7 @@
         let startTime = 0;
         let timerInterval = null;
         let elapsedTimeSeconds = 0;
+        let pausedTimeMs = 0;
 
         let selectedLevel = null;
         let selectedSuit = null;
@@ -658,21 +659,25 @@
             correctAnswersCount = 0;
             document.getElementById('quizCategoryTitle').innerText = titleStr;
             questionCountTotal = activeQuestionList.length;
-
             showView('viewQuiz');
-            
             elapsedTimeSeconds = 0;
+            pausedTimeMs = 0;
             startTime = Date.now();
             if (timerInterval) clearInterval(timerInterval);
             timerInterval = setInterval(() => {
-                elapsedTimeSeconds = Math.floor((Date.now() - startTime) / 1000);
-                let m = String(Math.floor(elapsedTimeSeconds / 60)).padStart(2, '0');
-                let s = String(elapsedTimeSeconds % 60).padStart(2, '0');
-                document.getElementById('timerText').innerText = `⏱ เวลา: ${m}:${s}`;
-            }, 1000);
+            elapsedTimeSeconds = Math.floor(
+            (Date.now() - startTime - pausedTimeMs) / 1000
+        );
 
-            loadNewQuestion();
-        }
+        let m = String(Math.floor(elapsedTimeSeconds / 60)).padStart(2, '0');
+        let s = String(elapsedTimeSeconds % 60).padStart(2, '0');
+
+        document.getElementById('timerText').innerText =
+            `⏱ เวลา: ${m}:${s}`;
+    }, 1000);
+
+    loadNewQuestion();
+}
 
         function generateCorrectHandAndQuiz(mode) {
             let sCount, hCount, dCount, cCount;
@@ -866,7 +871,20 @@
 
             ช่วยเขียนคำอธิบายเฉลยสั้นๆ กระชับ น่ารักๆ ตามคาแรคเตอร์น้องบริดจ์ (มีค่ะ/จ้าาา/อิโมจิ) ให้ผู้เล่นเข้าใจว่าทำไมถึงต้องตอบ ${correctAns} และอ้างอิงกฎบทที่ 1-2 ค่ะ
             `;
+            if (timerInterval) clearInterval(timerInterval);
+            const aiWaitStart = Date.now();
             let aiExplanation = await askBridgeAI(promptText);
+                pausedTimeMs += Date.now() - aiWaitStart;
+                timerInterval = setInterval(() => {
+                elapsedTimeSeconds = Math.floor(
+                (Date.now() - startTime - pausedTimeMs) / 1000
+                );
+
+            let m = String(Math.floor(elapsedTimeSeconds / 60)).padStart(2, '0');
+            let s = String(elapsedTimeSeconds % 60).padStart(2, '0');
+            document.getElementById('timerText').innerText =
+            `⏱ เวลา: ${m}:${s}`;
+            }, 1000);
 
             if (isCorrect) {
                 fb.innerHTML = `✔ <strong>ถูกต้องค่ะ!</strong> ตอบ: <strong>${correctAns}</strong><br><span style="font-size:0.9rem; font-weight:normal; display:block; margin-top:5px;">${aiExplanation.replace(/\n/g, '<br>')}</span>`;
